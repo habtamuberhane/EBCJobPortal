@@ -1,0 +1,74 @@
+﻿@model EBCJobPortalAdmin.Models.TblJobList
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Vacancies</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Vacancies</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Details</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-2">
+                            Title
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.JobTitle)
+                        </dd>
+                        <dt class="col-sm-2">
+                            Description
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.Raw(Model.JobDescription)
+                        </dd>
+                        @*<dt class="col-sm-2">
+                            Required No.
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.RequiredNumber)
+                        </dd>*@
+                        <dt class="col-sm-2">
+                            Posted Date
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.PostedDate)
+                        </dd>
+                        <dt class="col-sm-2">
+                            Expired Date
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.ExpiredDate)
+                        </dd>
+
+                    </dl>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Edit" asp-route-id="@Model?.JobId">Edit</a> |
+                    <a asp-action="Index">Back to List</a>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

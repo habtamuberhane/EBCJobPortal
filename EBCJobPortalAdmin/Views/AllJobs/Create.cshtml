@@ -1,0 +1,292 @@
+﻿@model EBCJobPortalAdmin.ViewModel.ApplicantModel
+@{
+
+}
+<style>
+    .nav-pills.custom-pills .nav-link.active {
+        color: #ffffff;
+        opacity: 1;
+        background-color: #2962FF;
+        border-bottom: 2px solid #2962FF;
+    }
+</style>
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Vacancy</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#">Vacancy</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Apply</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body wizard-content">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="JobId">
+                        <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true"><h5>Personal Info </h5></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#last-month" role="tab" aria-controls="pills-profile" aria-selected="false"><h5>Location </h5> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#previous-month" role="tab" aria-controls="pills-setting" aria-selected="false"><h5>Education Background </h5> </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-expriance-tab" data-toggle="pill" href="#expriance" role="tab" aria-controls="pills-expriance" aria-selected="false"><h5>Expriance Info (If you have any expriance else make it 0) </h5> </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                <div class="card-body">
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="firstName1">Full Name:</label>
+                                                    <input type="text" asp-for="FullName" class="form-control" id="firstName1">
+                                                    <span asp-validation-for="FullName" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Gender:</label>
+                                                    <div class="c-inputs-stacked">
+                                                        @foreach (var gender in Model.Genders)
+                                                        {
+                                                            <div class="custom-control custom-radio custom-control-inline">
+                                                                <input type="radio" asp-for="Gender" value="@gender" />@gender<br />
+                                                            </div>
+                                                        }
+                                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="phoneNumber1">Phone Number:</label>
+                                                    <input type="number" asp-for="PhoneNumber" class="form-control" id="phoneNumber1">
+                                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="emailAddress1">Email Address:</label>
+                                                    <input type="email" asp-for="EmailAddress" class="form-control" id="emailAddress1">
+                                                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="date1">Date of Birth:</label>
+                                                    <input type="date" asp-for="BirthDate" class="form-control" id="date1">
+                                                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="location1">Marital status:</label>
+                                                    <div class="c-inputs-stacked">
+                                                        @foreach (var status in Model.MaritalStatuses)
+                                                        {
+                                                            <div class="custom-control custom-radio custom-control-inline">
+                                                                <input type="radio" asp-for="MaritalStatus" value="@status" />@status<br />
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <span asp-validation-for="MaritalStatus" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="date1">Any Disablity:</label>
+                                                    <div class="c-inputs-stacked">
+                                                        @foreach (var disable in Model.Disablities)
+                                                        {
+                                                            <div class="custom-control custom-radio custom-control-inline">
+                                                                <input type="radio" asp-for="Disable" value="@disable" />@disable<br />
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <span asp-validation-for="Disable" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="date1">If any disablity(Reason for disablity):</label>
+                                                    <textarea id="text-3" rows="5" asp-for="ReasonForDisablity" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="last-month" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <div class="card-body">
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="jobTitle1">Nation:</label>
+                                                    <input type="text" asp-for="Nation" class="form-control" id="jobTitle1">
+                                                    <span asp-validation-for="Nation" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="videoUrl1">Region :</label>
+                                                    @Html.DropDownListFor(model => model.Regid, new SelectList(Model.Regions, "Value", "Text"), htmlAttributes: new { @class = "custom-select form-control" })
+                                                    <span asp-validation-for="Regid" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="shortDescription1">Sub-City/Zone:</label>
+                                                    <input type="text" asp-for="ZoneSubcity" class="form-control" id="ZoneSubcity1">
+                                                    <span asp-validation-for="ZoneSubcity" class="text-danger"></span>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="jobTitle1">Worede :</label>
+                                                    <input type="text" asp-for="Worede" class="form-control" id="Worede1">
+                                                    <span asp-validation-for="Worede" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="jobTitle1">House No.:</label>
+                                                    <input type="text" asp-for="HouseNumber" class="form-control" id="HouseNumber1">
+                                                    <span asp-validation-for="HouseNumber" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="previous-month" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                <div class="card-body">
+
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="int1">Field of Study:</label>
+                                                    <input type="text" asp-for="EducationField" class="form-control">
+                                                    <span asp-validation-for="EducationField" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="int1">Level of Study:</label>
+                                                    <input type="text" asp-for="EducationLevel" class="form-control">
+                                                    <span asp-validation-for="EducationLevel" class="text-danger"></span>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Location1">Inistitution :</label>
+                                                    <input type="text" asp-for="Institution" class="form-control">
+                                                    <span asp-validation-for="Institution" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="intType1">Year of graduation :</label>
+                                                    <input type="text" asp-for="GraduationYear" class="form-control">
+                                                    <span asp-validation-for="GraduationYear" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="jobTitle2">CGPA :</label>
+                                                    <input type="text" asp-for="Cgpa" class="form-control">
+                                                    <span asp-validation-for="Cgpa" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="text-4">Any short term training :</label>
+                                                    <textarea id="text-4" rows="5" asp-for="CvShorttermTranings" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="expriance" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                <div class="card-body">
+
+                                    <!-- Step 4 -->
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="behName1">No of years :</label>
+                                                    <input type="number" asp-for="NumberofExprianceYears" class="form-control" id="behName1">
+                                                    <span asp-validation-for="NumberofExprianceYears" class="text-danger"></span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="participants1">Working Company:</label>
+                                                    <input type="text" asp-for="CurrentWorkingCompany" class="form-control">
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="participants1">Positon title:</label>
+                                                    <input type="text" asp-for="PositionTitle" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="participants1">Monthly Salary:</label>
+                                                    <input type="text" asp-for="MonthlySalary" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="participants1">Curiculum Vitae(CV):</label>
+                                                    <input type="file" asp-for="Cvfile" class="form-control">
+                                                    <span asp-validation-for="Cvfile" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class="card-footer text-right">
+                                    <div class="form-group">
+                                        <a asp-action="Index">Home</a>
+                                        <input type="submit" value="Submit" class="btn btn-primary" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+

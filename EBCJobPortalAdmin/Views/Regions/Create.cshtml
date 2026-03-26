@@ -1,0 +1,56 @@
+﻿@model EBCJobPortalAdmin.Models.TblRegion
+
+@{
+    ViewData["Title"] = "Create Regions";
+}
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Regions</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Regions</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <form asp-action="Create">
+                    <div class="card-body">
+                        <div class="col-md-4">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group">
+                                <label asp-for="RegionName" class="control-label"></label>
+                                <input asp-for="RegionName" class="form-control" />
+                                <span asp-validation-for="RegionName" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                            <a asp-action="Index">Back to List</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

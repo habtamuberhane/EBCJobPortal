@@ -1,0 +1,42 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Vacancy</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Error</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="error-box">
+            <div class="error-body text-center">
+                <h1 class="error-title text-info">500</h1>
+                <h3 class="text-uppercase error-subtitle">INTERNAL SERVER ERROR !</h3>
+                <p class="text-muted m-t-30 m-b-30">PLEASE TRY AFTER SOME TIME</p>
+                <a href="index.html" class="btn btn-danger btn-rounded waves-effect waves-light m-b-40">Back to home</a>
+            </div>
+        </div>
+        @if (Model.ShowRequestId)
+        {
+            <p>
+                <strong>Request ID:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
+    </div>
+</div>

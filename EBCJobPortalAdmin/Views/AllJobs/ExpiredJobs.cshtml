@@ -1,0 +1,81 @@
+﻿@model IEnumerable<EBCJobPortalAdmin.Models.TblJobList>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Vacancies</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Vacancies</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Lists</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="file_export" class="table table-striped table-bordered display">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Title
+                                    </th>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Required No.
+                                    </th>
+                                    <th>
+                                        Posted Date
+                                    </th>
+                                    <th>
+                                        Expired Date
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.JobTitle)
+                                        </td>
+                                        <td>
+                                            @Html.Raw(item.JobDescription)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RequiredNumber)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.PostedDate)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ExpiredDate)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

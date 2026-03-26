@@ -1,0 +1,674 @@
+﻿@model EBCJobPortalAdmin.ViewModel.ApplicantsListModel
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Index";
+    var isCardView = Context.Request.Cookies["ApplicantViewMode"] == "Card";
+
+    // Helper variables for stats
+    var applicants = Model.Applicants?.ToList() ?? new List<TblApplicant>();
+    var totalApplicants = applicants.Count;
+    var maleCount = applicants.Count(x => x.Gender == "Male");
+    var femaleCount = applicants.Count(x => x.Gender == "Female");
+
+    var avgExperience = 0.0;
+    if (applicants.Any(x => x.NumberofExprianceYears != null))
+    {
+        avgExperience = Math.Round(applicants
+            .Where(x => x.NumberofExprianceYears != null)
+            .Average(x => Convert.ToDouble(x.NumberofExprianceYears ?? 0)), 1);
+    }
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+<style>
+    /* Card View Styles */
+    .applicant-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        background: white;
+        border: none;
+        margin-bottom: 25px;
+    }
+
+        .applicant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+    .card-header-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 20px;
+        color: white;
+        position: relative;
+    }
+
+        .card-header-gradient .applicant-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .card-header-gradient .job-title {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+    .card-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 600;
+        color: white;
+        border: 3px solid rgba(255,255,255,0.3);
+    }
+
+    .applicant-info-item {
+        padding: 10px 15px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+    }
+
+        .applicant-info-item:last-child {
+            border-bottom: none;
+        }
+
+    .info-icon {
+        width: 35px;
+        height: 35px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: #667eea;
+    }
+
+    .info-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 2px;
+    }
+
+    .info-value {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #343a40;
+    }
+
+    .card-footer-actions {
+        background: #f8f9fa;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        background: white;
+        color: #667eea;
+        border: 1px solid #e0e0e0;
+        text-decoration: none;
+    }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: scale(1.1);
+        }
+
+    .badge-custom {
+        padding: 5px 10px;
+        border-radius: 30px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    /* View Toggle Buttons */
+    .view-toggle {
+        background: white;
+        border-radius: 10px;
+        padding: 5px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        display: inline-flex;
+    }
+
+        .view-toggle .btn {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+
+            .view-toggle .btn.active {
+                background: #667eea;
+                color: white;
+            }
+
+            .view-toggle .btn i {
+                margin-right: 5px;
+            }
+
+    /* Filter Section Enhancement */
+    .filter-section {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .custom-select {
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+        .custom-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+    /* Stats Cards */
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+
+    /* Table Styles */
+    .table thead th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 500;
+        border: none;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(102, 126, 234, 0.05);
+    }
+
+    .badge-info {
+        background: #17a2b8;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-success {
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-warning {
+        background: #ffc107;
+        color: #212529;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-secondary {
+        background: #6c757d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    .badge-primary {
+        background: #007bff;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 30px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .view-toggle {
+            width: 100%;
+            margin-top: 15px;
+        }
+
+            .view-toggle .btn {
+                flex: 1;
+            }
+
+        .stats-card .col-md-3 {
+            margin-bottom: 15px;
+        }
+    }
+</style>
+
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Applicants</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Applicants</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Lists</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Stats Cards -->
+    <div class="row stats-card">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="d-flex align-items-center">
+                <div class="info-icon" style="background: #e3f2fd; color: #1976d2;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="ms-3">
+                    <div class="info-label">Total Applicants</div>
+                    <div class="info-value h4">@totalApplicants</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="d-flex align-items-center">
+                <div class="info-icon" style="background: #e8f5e8; color: #388e3c;">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <div class="ms-3">
+                    <div class="info-label">Available Jobs</div>
+                    <div class="info-value h4">@(Model.Jobs?.Count() ?? 0)</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="d-flex align-items-center">
+                <div class="info-icon" style="background: #fff3e0; color: #f57c00;">
+                    <i class="fas fa-venus-mars"></i>
+                </div>
+                <div class="ms-3">
+                    <div class="info-label">Gender Ratio</div>
+                    <div class="info-value h6">
+                        M: @maleCount | F: @femaleCount
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="d-flex align-items-center">
+                <div class="info-icon" style="background: #fce4e4; color: #c2185b;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="ms-3">
+                    <div class="info-label">Avg Experience</div>
+                    <div class="info-value h6">@avgExperience Years</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h4 class="card-title mb-0">
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="fas fa-plus-circle me-2"></i>Create New
+                        </a>
+                    </h4>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="view-toggle" role="group">
+                        <button type="button" class="btn @(!isCardView ? "active" : "")" onclick="toggleView('Table')">
+                            <i class="fas fa-table"></i> Table
+                        </button>
+                        <button type="button" class="btn @(isCardView ? "active" : "")" onclick="toggleView('Card')">
+                            <i class="fas fa-id-card"></i> Cards
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-action="Index" method="post" class="mt-4 filter-section">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group" style="display:flex !important; align-items: center;">
+                            <label for="JobId" class="me-3 fw-bold">Filter by Job:</label>
+                            @Html.DropDownListFor(model => model.JobId,
+                                new SelectList(Model.Jobs, "Value", "Text"),
+                                "--select here--",
+                                htmlAttributes: new { @class = "custom-select form-control" })
+                            <span asp-validation-for="JobId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter me-2"></i>Apply Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <!-- Table View -->
+            <div id="tableView" style="display: @(isCardView ? "none" : "block")">
+                <div class="table-responsive">
+                    <table id="file_export" class="table table-striped table-bordered display">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Birth Date</th>
+                                <th>Gender</th>
+                                <th>Phone No.</th>
+                                <th>Marital Status</th>
+                                <th>Disability</th>
+                                <th>Region</th>
+                                <th>Zone/Sub-city</th>
+                                <th>Woreda</th>
+                                <th>House No.</th>
+                                <th>Current Company</th>
+                                <th>Position</th>
+                                <th>Experience</th>
+                                <th>Education</th>
+                                <th>Field</th>
+                                <th>Institution</th>
+                                <th>Grad Year</th>
+                                <th>CGPA</th>
+                                <th>CV</th>
+                                <th>Location</th>
+                                <th>Job Title</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (applicants.Any())
+                            {
+                                foreach (var item in applicants)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                                        <td>@(item.BirthDate?.ToString("MM/dd/yyyy") ?? "-")</td>
+                                        <td>
+                                            <span class="badge @(item.Gender == "Male" ? "badge-info" : "badge-success")">
+                                                @Html.DisplayFor(modelItem => item.Gender)
+                                            </span>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.MaritalStatus)</td>
+                                        <td>
+                                            @if (item.AreYouDisable == true)
+                                            {
+                                                <span class="badge badge-warning" title="@item.ReasonForDisablity">Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-secondary">No</span>
+                                            }
+                                        </td>
+                                        <td>@(item.Reg?.RegionName ?? "-")</td>
+                                        <td>@Html.DisplayFor(modelItem => item.ZoneSubcity)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Worede)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.HouseNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.CurrentWorkingCompany)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PositionTitle)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.NumberofExprianceYears)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.EducationLevel)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.EducationField)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Institution)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.GraduationYear)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Cgpa)</td>
+                                        <td>
+                                            @if (!string.IsNullOrEmpty(item.Cvfile))
+                                            {
+                                                <a asp-action="DocumentViewer" asp-controller="DocumentViewer"
+                                                   asp-route-path="@item.Cvfile"
+                                                   asp-route-methodController="Applicants"
+                                                   asp-route-method="Index"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-file-pdf"></i> View
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">No CV</span>
+                                            }
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.JobLocation)</td>
+                                        <td>
+                                            <span class="badge badge-primary">@(item.Job?.JobTitle ?? "-")</span>
+                                        </td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@item.ApplyId" class="action-btn" title="Details">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                            <a asp-action="Edit" asp-route-id="@item.ApplyId" class="action-btn" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.ApplyId" class="action-btn" title="Delete"
+                                               onclick="return confirm('Are you sure you want to delete this applicant?');">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="22" class="text-center py-4">
+                                        <i class="fas fa-info-circle fa-2x text-muted mb-3"></i>
+                                        <h5 class="text-muted">No applicants found</h5>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Card View -->
+            <div id="cardView" style="display: @(isCardView ? "block" : "none")">
+                <div class="row">
+                    @if (applicants.Any())
+                    {
+                        foreach (var item in applicants)
+                        {
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <div class="applicant-card">
+                                    <div class="card-header-gradient">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="applicant-name">@item.FullName</div>
+                                                <div class="job-title">
+                                                    <i class="fas fa-briefcase me-1"></i>@(item.Job?.JobTitle ?? "No Job Assigned")
+                                                </div>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <div class="card-avatar">
+                                                    @(item.FullName?.Substring(0,1).ToUpper() ?? "?")
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body p-0">
+                                        <!-- Personal Info -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-venus-mars"></i></div>
+                                            <div>
+                                                <div class="info-label">Gender / Marital Status</div>
+                                                <div class="info-value">
+                                                    @item.Gender | @item.MaritalStatus
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Contact Info -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-phone"></i></div>
+                                            <div>
+                                                <div class="info-label">Phone Number</div>
+                                                <div class="info-value">@item.PhoneNumber</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Location -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                            <div>
+                                                <div class="info-label">Location</div>
+                                                <div class="info-value">
+                                                    @(item.Reg?.RegionName ?? "-"), @item.ZoneSubcity, @item.Worede
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Experience & Education -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-briefcase"></i></div>
+                                            <div>
+                                                <div class="info-label">Experience & Education</div>
+                                                <div class="info-value">
+                                                    @(item.NumberofExprianceYears ?? 0) yrs | @item.EducationLevel
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Current Work -->
+                                        @if (!string.IsNullOrEmpty(item.CurrentWorkingCompany))
+                                        {
+                                            <div class="applicant-info-item">
+                                                <div class="info-icon"><i class="fas fa-building"></i></div>
+                                                <div>
+                                                    <div class="info-label">Current Company</div>
+                                                    <div class="info-value">@item.CurrentWorkingCompany</div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- Disability Info -->
+                                        @if (item.AreYouDisable == true)
+                                        {
+                                            <div class="applicant-info-item" style="background: #fff3f3;">
+                                                <div class="info-icon" style="color: #dc3545;"><i class="fas fa-wheelchair"></i></div>
+                                                <div>
+                                                    <div class="info-label">Disability</div>
+                                                    <div class="info-value">@item.ReasonForDisablity</div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <!-- Institution -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-graduation-cap"></i></div>
+                                            <div>
+                                                <div class="info-label">Institution</div>
+                                                <div class="info-value">@item.Institution</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- CGPA & Graduation -->
+                                        <div class="applicant-info-item">
+                                            <div class="info-icon"><i class="fas fa-star"></i></div>
+                                            <div>
+                                                <div class="info-label">CGPA / Graduation Year</div>
+                                                <div class="info-value">@item.Cgpa | @item.GraduationYear</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-footer-actions">
+                                        @if (!string.IsNullOrEmpty(item.Cvfile))
+                                        {
+                                            <a asp-action="DocumentViewer" asp-controller="DocumentViewer"
+                                               asp-route-path="@item.Cvfile"
+                                               asp-route-methodController="Applicants"
+                                               asp-route-method="Index"
+                                               class="action-btn" title="View CV">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                        }
+                                        <a asp-action="Details" asp-route-id="@item.ApplyId" class="action-btn" title="Details">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.ApplyId" class="action-btn" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.ApplyId" class="action-btn" title="Delete"
+                                           onclick="return confirm('Are you sure you want to delete this applicant?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="col-12">
+                            <div class="alert alert-info text-center py-5">
+                                <i class="fas fa-info-circle fa-3x mb-3"></i>
+                                <h4>No applicants found</h4>
+                                <p class="mb-0">Try adjusting your filter or create a new applicant.</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+    <script>
+        // Toggle between Table and Card view
+        function toggleView(viewMode) {
+            // Set cookie for 30 days
+            document.cookie = "ApplicantViewMode=" + viewMode + "; path=/; max-age=" + (30 * 24 * 60 * 60);
+
+            // Reload page to apply the view mode
+            location.reload();
+        }
+    </script>
+}

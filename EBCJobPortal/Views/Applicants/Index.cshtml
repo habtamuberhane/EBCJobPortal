@@ -1,0 +1,215 @@
+﻿@model IEnumerable<EBCJobPortal.Models.TblApplicant>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AreYouDisable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReasonForDisablity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Regid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ZoneSubcity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worede)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HouseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaritalStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RegistrationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentWorkingCompany)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PositionTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MonthlySalary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequirementDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyPhoneNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyPostNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IfNojobcurrently)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResignationationReson)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResignationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumberofExprianceYears)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EducationLevel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EducationField)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Institution)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GraduationYear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cgpa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CvShorttermTranings)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cvfile)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Job)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreYouDisable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReasonForDisablity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Regid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ZoneSubcity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Worede)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HouseNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaritalStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegistrationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentWorkingCompany)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PositionTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MonthlySalary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequirementDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyPhoneNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyPostNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IfNojobcurrently)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResignationationReson)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResignationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberofExprianceYears)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EducationLevel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EducationField)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Institution)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GraduationYear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cgpa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CvShorttermTranings)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cvfile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Job.JobId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ApplyId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ApplyId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ApplyId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

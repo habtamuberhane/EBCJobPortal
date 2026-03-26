@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35027.167
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBCJobPortal", "EBCJobPortal\EBCJobPortal.csproj", "{978A9A97-9183-4560-8A76-4E0D436C241B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBCJobPortalAdmin", "EBCJobPortalAdmin\EBCJobPortalAdmin.csproj", "{34762995-9D8B-47D7-AC08-D61A59162A7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{978A9A97-9183-4560-8A76-4E0D436C241B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978A9A97-9183-4560-8A76-4E0D436C241B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978A9A97-9183-4560-8A76-4E0D436C241B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978A9A97-9183-4560-8A76-4E0D436C241B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34762995-9D8B-47D7-AC08-D61A59162A7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34762995-9D8B-47D7-AC08-D61A59162A7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34762995-9D8B-47D7-AC08-D61A59162A7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34762995-9D8B-47D7-AC08-D61A59162A7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABF4E769-D3FE-438A-BE3B-00311839AF39}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,113 @@
+﻿@model EBCJobPortalAdmin.ViewModel.JobModel
+
+@{
+    ViewData["Title"] = "Edit Jobs";
+}
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Dashboard</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <form asp-action="Edit">
+                    <div class="card-body">
+                        <div class="col-md-8">
+
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input asp-for="JobId" type="hidden" class="form-control" />
+                            <div class="form-group">
+                                <label asp-for="JobTitle" class="control-label">Position title</label>
+                                <input asp-for="JobTitle" class="form-control" />
+                                <span asp-validation-for="JobTitle" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="JobDescription" class="control-label">Description</label>
+                                <textarea asp-for="JobDescription" class="form-control"></textarea>
+                                <span asp-validation-for="JobDescription" class="text-danger"></span>
+                            </div>
+                            @*<div class="form-group">
+                                    <label asp-for="RequiredNumber" class="control-label">Required No.</label>
+                                    <input asp-for="RequiredNumber" class="form-control" />
+                                    <span asp-validation-for="RequiredNumber" class="text-danger"></span>
+                                </div>*@
+                            <div class="form-group">
+                                <label asp-for="PostedDate" class="control-label">Posted date</label>
+                                <input asp-for="PostedDate" class="form-control" />
+                                <span asp-validation-for="PostedDate" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ExpiredDate" class="control-label">Expiry Date</label>
+                                <input asp-for="ExpiredDate" class="form-control" />
+                                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+                            <input type="submit" value="Save changes" class="btn btn-primary" />
+                            <a asp-action="Index">Back to List</a>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/assets/libs/tinymce/tinymce.min.js"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#JobDescription',
+            height: 300,
+            plugins: [
+                "advlist", "anchor", "autolink", "charmap", "code", "fullscreen",
+                "help", "image", "insertdatetime", "link", "lists", "media",
+                "preview", "searchreplace", "table", "visualblocks",
+            ],
+            toolbar: 'undo redo | link image | code',
+            image_title: true,
+            automatic_uploads: true,
+            file_picker_types: 'image',
+            file_picker_callback: (cb, value, meta) => {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.addEventListener('load', () => {                        
+                        const id = 'blobid' + (new Date()).getTime();
+                        const blobCache = tinymce.activeEditor.editorUpload.blobCache;
+                        const base64 = reader.result.split(',')[1];
+                        const blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+                        cb(blobInfo.blobUri(), { title: file.name });
+                    });
+                    reader.readAsDataURL(file);
+                });
+                input.click();
+            },
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+        });
+    </script>
+}
