@@ -1,81 +1,56 @@
-﻿
-@inject IHttpContextAccessor _context;
 @{
-
-    string filepath = @ViewBag.path;
-
+    var filepath = ViewBag.path as string;
+    var backController = ViewBag.controller as string;
+    var backAction = ViewBag.action as string;
+    var isPreviewable = !string.IsNullOrWhiteSpace(filepath)
+                        && (filepath.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)
+                            || filepath.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                            || filepath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                            || filepath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase));
 }
 
-<div class="page-body">
-    <div class="container-xl">
-        <div class="row row-cards">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <a style="color:darkblue" asp-action="@ViewBag.action" asp-controller="@ViewBag.controller">
-                            <i class="bi bi-backspace-fill"></i>
-                            Back list
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        @try
-                        {
-                            if (filepath != null)
-                            {
-                                if (filepath.EndsWith(".pdf") || filepath.EndsWith(".PNG") || filepath.EndsWith(".JPG") || filepath.EndsWith(".png") || filepath.EndsWith(".jpg"))
-                                {
-                                    <div class="row">
-                                        <embed src="@ViewBag.path" style="width:100%; height:100vh" />
-                                    </div>
-                                }
-                                else if (filepath.EndsWith(".docx"))
-                                {
-                                    <div class="row">
-                                        <a asp-action="DownloadEvidenceFile" asp-route-path="@filepath" asp-route-method="@ViewBag.action" asp-route-methodController="@ViewBag.controller" style="font-size:40px">  <i class="bi bi-cloud-arrow-down-fill"></i> &nbsp;Download</a>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="row">
-                                        <div class="error-content">
-                                            <h3><i class="fas fa-exclamation-triangle text-warning"></i>File Not found</h3>
-                                            <p>
-                                                Open file
-                                            </p>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <div class="row">
-                                    <div class="error-content">
-                                        <h3><i class="fas fa-exclamation-triangle text-warning"></i>File not found</h3>
-                                        <p>
-                                            Can't open file
-                                        </p>
-                                    </div>
-                                </div>
-                            }
+<section class="space-y-6">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <div class="space-y-2">
+            <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Document Viewer</p>
+            <h1 class="text-4xl font-bold tracking-tight text-slate-950">Applicant Document</h1>
+            <p class="text-base leading-7 text-slate-600">Preview the uploaded CV here or download it directly if your browser cannot render it inline.</p>
+        </div>
 
-                        }
-                        catch (Exception ex)
-                        {
-                            <div class="row">
-                                <div class="error-content">
-                                    <h3><i class="fas fa-exclamation-triangle text-warning"></i>File not found</h3>
-                                    <p>
-                                        File can't be open
-                                        because of @ex.Message
-                                    </p>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+        <div class="flex flex-wrap gap-3">
+            <a asp-action="@backAction" asp-controller="@backController" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                Back to List
+            </a>
+
+            @if (!string.IsNullOrWhiteSpace(filepath))
+            {
+                <a asp-action="DownloadEvidenceFile" asp-route-path="@filepath" asp-route-method="@backAction" asp-route-methodController="@backController" class="admin-gradient inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                    Download File
+                </a>
+            }
         </div>
     </div>
-</div>
 
-
+    <div class="admin-card rounded-[2rem] p-6">
+        @if (isPreviewable)
+        {
+            <div class="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-50">
+                <iframe src="@filepath" title="Applicant document preview" style="width:100%; height:85vh; border:0;"></iframe>
+            </div>
+        }
+        else if (!string.IsNullOrWhiteSpace(filepath))
+        {
+            <div class="rounded-[1.75rem] border border-amber-200 bg-amber-50 px-6 py-5">
+                <p class="text-sm font-semibold uppercase tracking-[0.08em] text-amber-700">Preview unavailable</p>
+                <p class="mt-2 text-sm leading-7 text-slate-700">This file type cannot be previewed inline. Use the download button to open it locally.</p>
+            </div>
+        }
+        else
+        {
+            <div class="rounded-[1.75rem] border border-red-200 bg-red-50 px-6 py-5">
+                <p class="text-sm font-semibold uppercase tracking-[0.08em] text-red-700">File not found</p>
+                <p class="mt-2 text-sm leading-7 text-slate-700">The requested document path is missing or invalid.</p>
+            </div>
+        }
+    </div>
+</section>

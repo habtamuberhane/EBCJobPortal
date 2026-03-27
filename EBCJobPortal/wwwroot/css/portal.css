@@ -1,0 +1,269 @@
+:root {
+    /* Core brand token keeps the main accent color consistent across Tailwind and custom CSS. */
+    --portal-primary: #023f5b;
+
+    /* A lighter companion tone gives gradients depth without drifting away from the EBC palette. */
+    --portal-primary-light: #0a5f84;
+
+    /* Deep ink supports high-contrast text and richer emphasis surfaces. */
+    --portal-primary-ink: #012d41;
+
+    /* Soft tint creates subtle panels that still feel on-brand. */
+    --portal-primary-mist: #e7f0f5;
+
+    /* Clean neutral tokens support the minimalist layout language. */
+    --portal-surface: rgba(255, 255, 255, 0.78);
+    --portal-surface-strong: #ffffff;
+    --portal-border: rgba(148, 163, 184, 0.18);
+    --portal-text: #0f172a;
+    --portal-muted: #475569;
+
+    /* The 135-degree brand gradient is the main high-emphasis treatment requested for CTAs and hero surfaces. */
+    --portal-gradient: linear-gradient(135deg, #023f5b 0%, #0a5f84 100%);
+
+    /* Shared shadow values keep cards and gradient buttons cohesive. */
+    --portal-shadow-soft: 0 20px 60px rgba(2, 63, 91, 0.12);
+    --portal-shadow-card: 0 24px 60px rgba(15, 23, 42, 0.08);
+}
+
+html {
+    /* A smooth scroll behavior makes anchor navigation feel more app-like. */
+    scroll-behavior: smooth;
+}
+
+body.portal-body {
+    /* The background mixes neutral and brand-tinted light tones to avoid a flat white canvas. */
+    background:
+        radial-gradient(circle at top left, rgba(10, 95, 132, 0.08), transparent 30%),
+        linear-gradient(180deg, #f8fbfd 0%, #f8fafc 42%, #ffffff 100%);
+
+    /* The text color token guarantees consistent legibility across pages. */
+    color: var(--portal-text);
+
+    /* DM Sans gives the body copy a cleaner and more neutral tone across the portal. */
+    font-family: "DM Sans", system-ui, sans-serif;
+}
+
+body.portal-body,
+body.portal-body * {
+    box-sizing: border-box;
+}
+
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+    appearance: none;
+    border: 0;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(2, 63, 91, 0.12);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-display {
+    /* Outfit gives headings a modern shape while staying smooth and easy to read. */
+    font-family: "Outfit", "DM Sans", system-ui, sans-serif;
+}
+
+.portal-gradient {
+    /* Centralizing the gradient in CSS keeps CTAs visually consistent even if Tailwind classes change later. */
+    background-image: var(--portal-gradient);
+}
+
+.portal-surface {
+    /* Frosted white surfaces reinforce the premium, high-whitespace UI language. */
+    background: var(--portal-surface);
+    border: 1px solid var(--portal-border);
+    box-shadow: var(--portal-shadow-soft);
+    backdrop-filter: blur(18px);
+}
+
+.portal-job-card {
+    /* The card surface uses a stronger white fill so vacancy content remains highly legible. */
+    background: var(--portal-surface-strong);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: var(--portal-shadow-card);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.portal-job-card:hover {
+    /* A subtle lift on hover gives the cards an app-like feel without becoming flashy. */
+    transform: translateY(-4px);
+    border-color: rgba(2, 63, 91, 0.18);
+    box-shadow: 0 28px 70px rgba(2, 63, 91, 0.14);
+}
+
+.portal-application-shell {
+    max-width: 68rem;
+}
+
+.portal-application-card {
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(226, 232, 240, 0.88);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08);
+}
+
+.portal-application-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.portal-form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.portal-form-section:first-of-type {
+    padding-top: 0;
+    border-top: 0;
+}
+
+.portal-form-grid {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.portal-choice-grid {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.portal-choice-card {
+    min-height: 3.5rem;
+    align-items: center;
+}
+
+.portal-form-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+@media (min-width: 640px) {
+    .portal-form-actions {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 768px) {
+    .portal-form-grid--two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .portal-form-grid--three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.portal-richtext {
+    /* Rich text uses softer line-height and color to keep long vacancy descriptions comfortable to scan. */
+    color: var(--portal-muted);
+    line-height: 1.8;
+}
+
+.portal-richtext p + p {
+    /* Vertical rhythm between paragraphs improves readability in detailed content sections. */
+    margin-top: 1rem;
+}
+
+.portal-richtext ul,
+.portal-richtext ol {
+    /* Inner list spacing prevents imported HTML content from feeling cramped. */
+    margin-top: 1rem;
+    padding-left: 1.25rem;
+}
+
+.portal-richtext li + li {
+    /* Additional list spacing supports better scannability for requirement bullet points. */
+    margin-top: 0.5rem;
+}
+
+.portal-logo-stage::before {
+    /* A soft brand glow keeps the hero visual atmospheric without adding clutter. */
+    content: "";
+    position: absolute;
+    inset: 18%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(10, 95, 132, 0.22) 0%, rgba(10, 95, 132, 0) 70%);
+    filter: blur(18px);
+}
+
+.portal-logo-ring {
+    /* The rings create the animated broadcast feel without introducing extra JavaScript. */
+    position: absolute;
+    border-radius: 9999px;
+    border: 1.5px solid rgba(2, 63, 91, 0.16);
+    animation: portalRingFade 4.2s ease-out infinite;
+}
+
+.portal-logo-ring--outer {
+    /* The outer ring starts wide so it can expand further before fading out. */
+    inset: 4%;
+}
+
+.portal-logo-ring--middle {
+    /* The middle ring starts closer to the logo and trails just behind the first ring. */
+    inset: 14%;
+    animation-delay: 1s;
+}
+
+.portal-logo-core {
+    /* The central disc strengthens the logo presence while matching the glassy design language. */
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 24px 60px rgba(2, 63, 91, 0.16);
+}
+
+.portal-logo-mark {
+    /* The logo floats gently so the motion feels polished rather than distracting. */
+    animation: portalLogoFloat 5s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(2, 63, 91, 0.18));
+}
+
+@keyframes portalLogoFloat {
+    /* A small vertical drift keeps the logo animation refined and subtle. */
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes portalRingFade {
+    /* The ring animation now expands further and fades away for a cleaner signal effect. */
+    0% {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    18% {
+        opacity: 0.72;
+    }
+
+    100% {
+        transform: scale(1.24);
+        opacity: 0;
+    }
+}

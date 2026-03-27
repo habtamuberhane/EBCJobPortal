@@ -1,279 +1,179 @@
-﻿<!DOCTYPE html>
-<html dir="ltr" lang="en">
+@{
+    // A single computed title keeps metadata predictable while still allowing individual pages to override the prefix.
+    var pageTitle = string.IsNullOrWhiteSpace(ViewData["Title"] as string)
+        ? "EBC Job Portal"
+        : $"{ViewData["Title"]} | EBC Job Portal";
 
+    // Sensible fallback metadata prevents empty tags from degrading search and social previews.
+    var pageDescription = ViewData["Description"] as string ?? "Discover current career opportunities at Ethiopian Broadcasting Corporation.";
+    var pageKeywords = ViewData["Keywords"] as string ?? "EBC, Ethiopian Broadcasting Corporation, careers, jobs, vacancies";
+    var pageUrl = ViewData["Url"] as string ?? $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    var pageImage = ViewData["Image"] as string ?? Url.Content("~/assets/images/rounded_logo-removebg-preview.png");
+}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>EBC Job portal</title>
-    <title>@ViewData["title"]:EBC Job portal</title>
-    <meta name="description" content="@ViewData["description"]" />
-    <meta name="keywords" content="@ViewData["keywords"]" />
-    <meta name="theme-color" content="#2757fd" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@pageTitle</title>
+    <meta name="description" content="@pageDescription" />
+    <meta name="keywords" content="@pageKeywords" />
+    <meta name="theme-color" content="#023f5b" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="@Url.Content("~/assets/dott-01-01.svg")" />
-    <link rel="icon" sizes="32x32" href="@Url.Content("~/assets/dott-01-01.svg")" />
-    <link rel="icon" sizes="16x16" href="@Url.Content("~/assets/dott-01-01.svg")" />
-
-    <!-- Canonical -->
-    @if (ViewData["canonical"] != null)
+    @* Canonical tags stay optional because not every local environment has a public absolute URL. *@
+    @if (ViewData["Canonical"] is string canonicalUrl && !string.IsNullOrWhiteSpace(canonicalUrl))
     {
-        <link rel="canonical" href="@ViewData["canonical"]" />
+        <link rel="canonical" href="@canonicalUrl" />
     }
 
-    <!-- Open Graph -->
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="@ViewData["title"]" />
-    <meta property="og:description" content="@ViewData["description"]" />
-    <meta property="og:url" content="@ViewData["url"]" />
-    <meta property="og:site_name" content="ebc.et" />
-    <meta property="og:image" content="@ViewData["image"]" />
-    <meta property="og:image:width" content="1180" />
-    <meta property="og:image:height" content="600" />
-    <meta property="og:image:type" content="image/png" />
+    <meta property="og:title" content="@pageTitle" />
+    <meta property="og:description" content="@pageDescription" />
+    <meta property="og:url" content="@pageUrl" />
+    <meta property="og:site_name" content="EBC Job Portal" />
+    <meta property="og:image" content="@pageImage" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="@ViewData["title"]" />
-    <meta name="twitter:description" content="@ViewData["description"]" />
-    <meta name="twitter:image" content="@ViewData["image"]" />
-    <link href="~/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
-    <link href="~/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
-    <link href="~/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
-    <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
-    <link href="~/dist/css/style.min.css" rel="stylesheet">
-    <link href="~/dist/css/style.min.css" rel="stylesheet">
-    <link href="~/assets/libs/jquery-steps/jquery.steps.css" rel="stylesheet">
-    <link href="~/assets/libs/jquery-steps/steps.css" rel="stylesheet">
+    <meta name="twitter:title" content="@pageTitle" />
+    <meta name="twitter:description" content="@pageDescription" />
+    <meta name="twitter:image" content="@pageImage" />
+
+    @* The favicon remains local so the portal branding still works offline and in development. *@
+    <link rel="icon" type="image/png" href="~/assets/images/rounded_logo-removebg-preview.png" />
+
+    @* Outfit and DM Sans give the portal a cleaner, calmer tone than the previous font pairings. *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    @* Tailwind via CDN is used here exactly as requested to speed up the redesign without adding a local build step first. *@
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        // Tailwind is configured inline so the design tokens are immediately available in Razor views during Hot Reload.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: "#023f5b",
+                            light: "#0a5f84",
+                            ink: "#012d41",
+                            mist: "#e7f0f5"
+                        }
+                    },
+                    fontFamily: {
+                        sans: ["DM Sans", "system-ui", "sans-serif"],
+                        display: ["Outfit", "DM Sans", "system-ui", "sans-serif"]
+                    },
+                    boxShadow: {
+                        soft: "0 20px 60px rgba(2, 63, 91, 0.12)"
+                    }
+                }
+            }
+        };
+    </script>
+
+    @* Portal-specific CSS variables and reusable component classes live outside Tailwind so brand tokens stay centralized. *@
+    <link rel="stylesheet" href="~/css/portal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tw-fallback.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
-    <div id="main-wrapper">
-        <header class="topbar">
-            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
-                <div class="navbar-header">
-                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
-                        <i class="ti-menu ti-close"></i>
-                    </a>
-                    <div class="navbar-brand">
-                        <a asp-action="Index" asp-controller="Home" class="logo">
-                            <b class="logo-icon">
-                                <img src="~/assets/images/rounded_logo-removebg-preview.png" style="height:50px; width:50px" alt="homepage" class="dark-logo" />
-                                <img src="~/assets/images/rounded_logo-removebg-preview.png" style="height:50px; width:50px" alt="homepage" class="light-logo" />
-                            </b>
-                            <span class="logo-text">
-                                EBC Job portal
-                            </span>
-                        </a>
-                        <a class="sidebartoggler d-none d-md-block" href="javascript:void(0)" data-sidebartype="mini-sidebar">
-                            <i class="mdi mdi-toggle-switch mdi-toggle-switch-off font-20"></i>
-                        </a>
-                    </div>
-                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)" data-toggle="collapse" data-target="#navbarSupportedContent"
-                       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="ti-more"></i>
-                    </a>
-                </div>
-                <div class="navbar-collapse collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav float-right">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark" asp-action="Index" asp-controller="Home">
-                                <span class="hide-menu">Home</span>
-                            </a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="https://ebc.et/contact.aspx" target="_blank">
-                                <span class="hide-menu">Contact</span>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="https://ebc.et" target="_blank">
-                                <span class="hide-menu">News</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </header>
-        <aside class="left-sidebar">
-            <div class="scroll-sidebar">
-                <nav class="sidebar-nav">
-                    <ul id="sidebarnav">
-                        <li class="sidebar-item">
-                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                                <i class="mdi mdi-av-timer"></i>
-                                <span class="hide-menu">Menus </span>
-                                <span class="badge badge-pill badge-info ml-auto m-r-15">2</span>
-                            </a>
-                            <ul aria-expanded="false" class="collapse  first-level nav-item">
-                                <li class="sidebar-item">
-                                    <a asp-action="Index" asp-controller="AllJobs" class="sidebar-link">
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <span class="hide-menu">Active Jobs </span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a asp-action="ExpiredJobs" asp-controller="AllJobs" class="sidebar-link">
-                                        <i class="fas fa-shopping-bag"></i>
-                                        <span class="hide-menu"> Expired Jobs </span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+<body class="portal-body min-h-screen bg-slate-50 text-slate-900 antialiased">
+    @* Flex column layout keeps the footer pinned to the bottom on shorter pages without custom JS. *@
+    <div class="relative flex min-h-screen flex-col overflow-x-clip">
+        @* Decorative background orbs add depth while preserving the minimalist palette. *@
+        <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_top,_rgba(10,95,132,0.18),_transparent_45%),radial-gradient(circle_at_right,_rgba(2,63,91,0.10),_transparent_30%)]"></div>
+
+        @* Sticky positioning and backdrop blur create the requested glass navigation effect while preserving readability. *@
+        <header class="sticky top-0 z-50 border-b border-white/60 bg-white/70 backdrop-blur-xl">
+            <div class="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+                @* The brand link pairs the logo with concise naming so the header stays elegant and compact. *@
+                <a asp-controller="Home" asp-action="Index" class="flex items-center gap-3 text-slate-900 transition hover:opacity-90">
+                    <img src="~/assets/images/rounded_logo-removebg-preview.png" alt="EBC logo" class="h-11 w-11 rounded-2xl border border-slate-200/80 bg-white p-1 shadow-sm" />
+                    <span class="flex flex-col">
+                        <span class="font-display text-xl font-extrabold tracking-tight text-slate-950">EBC Job Portal</span>
+                        <span class="text-xs font-medium uppercase tracking-[0.12em] text-slate-500">Careers at Ethiopian Broadcasting Corporation</span>
+                    </span>
+                </a>
+
+                @* Hidden-on-mobile navigation avoids cramped layouts and lets the mobile sheet handle smaller screens. *@
+                <nav class="hidden items-center gap-2 md:flex" aria-label="Primary">
+                    <a asp-controller="Home" asp-action="Index" class="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Home</a>
+                    <a asp-controller="AllJobs" asp-action="Index" class="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Open Roles</a>
+                    <a asp-controller="Home" asp-action="Contact" class="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">Contact</a>
+                    <a href="https://www.ebc.et" target="_blank" rel="noreferrer" class="rounded-full px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950">EBC Website</a>
+                </nav>
+
+                @* The mobile toggle keeps the nav accessible without bringing in a larger JS framework. *@
+                <button id="mobile-menu-button"
+                        type="button"
+                        class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white p-3 text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-slate-950 md:hidden"
+                        aria-controls="mobile-menu"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+                    </svg>
+                </button>
+            </div>
+
+            @* The mobile sheet mirrors the desktop IA so navigation remains consistent across breakpoints. *@
+            <div id="mobile-menu" class="hidden border-t border-slate-200/80 bg-white/90 px-4 py-4 backdrop-blur-xl md:hidden">
+                <nav class="flex flex-col gap-2" aria-label="Mobile">
+                    <a asp-controller="Home" asp-action="Index" class="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Home</a>
+                    <a asp-controller="AllJobs" asp-action="Index" class="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Open Roles</a>
+                    <a asp-controller="Home" asp-action="Contact" class="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">Contact</a>
+                    <a href="https://www.ebc.et" target="_blank" rel="noreferrer" class="rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950">EBC Website</a>
                 </nav>
             </div>
-        </aside>
-        <div class="page-wrapper">
+        </header>
+
+        @* Growing main content takes remaining viewport height so each page can breathe without layout hacks. *@
+        <main class="flex-1">
             @RenderBody()
-            <footer class="footer text-center">
-                All Rights Reserved by &copy;EBC. Designed and Developed by
-                <a href="https://ebc.et/english">EBC Website team</a>.
-            </footer>
-        </div>
-    </div>
-    <aside class="customizer">
-        <a href="javascript:void(0)" class="service-panel-toggle">
-            <i class="fa fa-spin fa-cog"></i>
-        </a>
-        <div class="customizer-body">
-            <ul class="nav customizer-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home"
-                       aria-selected="true">
-                        <i class="mdi mdi-wrench font-20"></i>
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                    <div class="p-15 border-bottom">
-                        <h5 class="font-medium m-b-10 m-t-10">Layout Settings</h5>
-                        <div class="custom-control custom-checkbox m-t-10">
-                            <input type="checkbox" class="custom-control-input" name="theme-view" id="theme-view">
-                            <label class="custom-control-label" for="theme-view">Dark Theme</label>
-                        </div>
-                        <div class="custom-control custom-checkbox m-t-10">
-                            <input type="checkbox" class="custom-control-input sidebartoggler" name="collapssidebar" id="collapssidebar">
-                            <label class="custom-control-label" for="collapssidebar">Collapse Sidebar</label>
-                        </div>
-                        <div class="custom-control custom-checkbox m-t-10">
-                            <input type="checkbox" class="custom-control-input" name="sidebar-position" id="sidebar-position">
-                            <label class="custom-control-label" for="sidebar-position">Fixed Sidebar</label>
-                        </div>
-                        <div class="custom-control custom-checkbox m-t-10">
-                            <input type="checkbox" class="custom-control-input" name="header-position" id="header-position">
-                            <label class="custom-control-label" for="header-position">Fixed Header</label>
-                        </div>
-                        <div class="custom-control custom-checkbox m-t-10">
-                            <input type="checkbox" class="custom-control-input" name="boxed-layout" id="boxed-layout">
-                            <label class="custom-control-label" for="boxed-layout">Boxed Layout</label>
-                        </div>
-                    </div>
-                    <div class="p-15 border-bottom">
-                        <h5 class="font-medium m-b-10 m-t-10">Logo Backgrounds</h5>
-                        <ul class="theme-color">
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin1"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin2"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin3"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin4"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin5"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-logobg="skin6"></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="p-15 border-bottom">
-                        <h5 class="font-medium m-b-10 m-t-10">Navbar Backgrounds</h5>
-                        <ul class="theme-color">
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin1"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin2"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin3"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin4"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin5"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-navbarbg="skin6"></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="p-15 border-bottom">
-                        <h5 class="font-medium m-b-10 m-t-10">Sidebar Backgrounds</h5>
-                        <ul class="theme-color">
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin1"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin2"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin3"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin4"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin5"></a>
-                            </li>
-                            <li class="theme-item">
-                                <a href="javascript:void(0)" class="theme-link" data-sidebarbg="skin6"></a>
-                            </li>
-                        </ul>
-                    </div>
+        </main>
+
+        @* The footer stays intentionally quiet so it supports the layout instead of competing with content. *@
+        <footer class="border-t border-slate-200 bg-white/80">
+            <div class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+                <div class="max-w-2xl">
+                    <p class="font-display text-lg font-bold tracking-tight text-slate-950">EBC Job Portal</p>
+                    <p class="mt-2 text-sm leading-6 text-slate-600">A clean, candidate-first experience for discovering and applying to opportunities at Ethiopian Broadcasting Corporation.</p>
+                </div>
+                <div class="flex flex-col gap-3 text-sm text-slate-500 sm:flex-row sm:items-center sm:gap-6">
+                    <a href="https://www.ebc.et" target="_blank" rel="noreferrer" class="transition hover:text-slate-900">Main Website</a>
+                    <span>&copy; @DateTime.Now.Year EBC. All rights reserved.</span>
                 </div>
             </div>
-        </div>
-    </aside>
-    <div class="chat-windows"></div>
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/dist/js/app.min.js"></script>
-    <script src="~/dist/js/app.init.js"></script>
-    <script src="~/dist/js/app-style-switcher.js"></script>
-    <script src="~/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
-    <script src="~/assets/extra-libs/sparkline/sparkline.js"></script>
-    <script src="~/dist/js/waves.js"></script>
-    <script src="~/dist/js/sidebarmenu.js"></script>
-    <script src="~/dist/js/custom.min.js"></script>
-    <script src="~/assets/extra-libs/c3/d3.min.js"></script>
-    <script src="~/assets/extra-libs/c3/c3.min.js"></script>
-    <script src="~/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js"></script>
-    <script src="~/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js"></script>
-    <script src="~/dist/js/pages/dashboards/dashboard1.js"></script>
-    <script src="~/assets/extra-libs/DataTables/datatables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
-    <script src="~/dist/js/pages/datatable/datatable-advanced.init.js"></script>
+        </footer>
+    </div>
+
+    <script>
+        // Grabbing the button once avoids repeated DOM lookups during interaction.
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+
+        // Grabbing the menu once keeps the toggle logic small and easy to follow.
+        const mobileMenu = document.getElementById("mobile-menu");
+
+        // The click handler only manages visibility and accessibility state, which keeps the behavior predictable.
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener("click", () => {
+                // Reading the current state from the DOM keeps the JS aligned with server-rendered markup.
+                const isExpanded = mobileMenuButton.getAttribute("aria-expanded") === "true";
+
+                // The hidden utility is toggled directly so the menu works without any JS framework dependency.
+                mobileMenu.classList.toggle("hidden", isExpanded);
+
+                // Updating aria-expanded keeps screen readers informed about the current state of the control.
+                mobileMenuButton.setAttribute("aria-expanded", (!isExpanded).toString());
+            });
+        }
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("NToastNotify")
     @await Component.InvokeAsync("Notyf")
 </body>
-
 </html>

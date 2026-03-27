@@ -1,302 +1,197 @@
-﻿@model IEnumerable<EBCJobPortal.Models.TblJobList>
+@model VacanciesIndexViewModel
+@using System.Text.RegularExpressions
 
 @{
-    ViewData["title"] = @ViewBag.title;
-    ViewData["description"] = @ViewBag.description;
-    ViewData["url"] = @ViewBag.url;
-    ViewData["image"] = @ViewBag.image;
-    ViewData["canonical"] = @ViewBag.canonical;
-    ViewData["keywords"] = @ViewBag.keywords;
-    ViewData["facebooktag"] = @ViewBag.facebooktag;
+    // This page title replaces the old repeated breadcrumb wording with a cleaner heading.
+    ViewData["Title"] = "Open Vacancies";
+    ViewData["Description"] = "Browse active vacancies currently available at Ethiopian Broadcasting Corporation.";
+    var applicationStatus = TempData["ApplicationStatus"] as string;
+    var applicationMessage = TempData["ApplicationMessage"] as string;
+    var appliedJobIds = (Context.Session.GetString("AppliedJobs") ?? string.Empty)
+        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+        .Select(value => int.TryParse(value, out var parsedId) ? parsedId : (int?)null)
+        .Where(parsedId => parsedId.HasValue)
+        .Select(parsedId => parsedId!.Value)
+        .ToHashSet();
+
+    // This helper removes stored HTML so summaries render with clean spacing and no broken markup.
+    static string StripHtml(string? input) => string.IsNullOrWhiteSpace(input)
+        ? string.Empty
+        : Regex.Replace(input, "<.*?>", string.Empty).Trim();
+
+    // This helper keeps list cards compact and consistent.
+    static string TruncateText(string value, int maxLength) => value.Length <= maxLength
+        ? value
+        : $"{value[..maxLength].TrimEnd()}...";
 }
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Vacancies</h4>
+
+@* The section replaces the old dashboard breadcrumb block with a single calm page introduction. *@
+<section class="pb-20 pt-14">
+    <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="mb-10 max-w-3xl space-y-3">
+            @* The eyebrow creates page hierarchy without repeating the same word three times. *@
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand">EBC Careers</p>
+            <h1 class="font-display text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Open vacancies</h1>
+            <p class="text-base leading-7 text-slate-600">Current opportunities available on the client portal.</p>
         </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">Vacancies</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Lists</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        @foreach (var item in Model)
+
+        @if (!string.IsNullOrWhiteSpace(applicationMessage))
         {
-            <div class="col-12 mb-4">
-                <div class="card w-100">
-                    <div class="card-body p-4">
-                        <div class="row align-items-center">
-                            <div class="col-md-12">
-                                <h5 class="card-title mb-2">@Html.DisplayFor(modelItem => item.JobTitle)</h5>
+            <div class="mb-8 rounded-[1.75rem] border px-6 py-5 @(string.Equals(applicationStatus, "success", StringComparison.OrdinalIgnoreCase) ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-amber-200 bg-amber-50 text-amber-800")">
+                <p class="text-sm font-semibold uppercase tracking-[0.08em]">Application status</p>
+                <p class="mt-2 text-sm leading-7">@applicationMessage</p>
+            </div>
+        }
 
-                                <div class="job-description mb-3">
-                                    <div class="description-text" >
+        @if (Model.Jobs.Any())
+        {
+            <div class="mb-8 flex flex-col gap-4 rounded-[1.75rem] border border-slate-200 bg-white px-6 py-5 shadow-soft sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Vacancy listing</p>
+                    <p class="mt-2 text-sm leading-7 text-slate-600">
+                        Showing @Model.StartItem-@Model.EndItem of @Model.TotalJobs active vacancies.
+                    </p>
+                </div>
 
-                                        @Html.Raw(item.JobDescription),
-                                    </div>
-                                </div>
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="flex items-center gap-3">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@(Model.PageNumber - 1)"
+                               class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                                Previous
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="inline-flex cursor-not-allowed items-center justify-center rounded-2xl border border-slate-200 bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-400">
+                                Previous
+                            </span>
+                        }
 
-                                <div class="job-meta d-flex flex-wrap gap-3">
-                                    <div class="meta-item d-flex align-items-center">
-                                        <span class="text-muted me-2">
-                                            <i class="fas fa-calendar-plus me-1"></i> Posted:
-                                        </span>
-                                        <span class="text-dark fw-medium">
-                                            @if (item.PostedDate.HasValue)
-                                            {
-                                                @item.PostedDate.Value.ToString("MMM dd, yyyy")
-                                            }
-                                        </span>
-                                    </div>
-                                    <div class="meta-item d-flex align-items-center">
-                                        <span class="text-muted me-2">
-                                            <i class="fas fa-calendar-times me-1"></i> Expires:
-                                        </span>
-                                        <span class="text-dark fw-medium">
-                                            @if (item.ExpiredDate.HasValue)
-                                            {
-                                                @item.ExpiredDate.Value.ToString("MMM dd, yyyy")
-                                            }
-                                        </span>
-                                    </div>
-                                    @if (item.RequiredNumber.HasValue)
-                                    {
-                                        <div class="meta-item d-flex align-items-center">
-                                            <span class="text-muted me-2">
-                                                <i class="fas fa-users me-1"></i> Required:
-                                            </span>
-                                            <span class="badge bg-primary rounded-pill">
-                                                @item.RequiredNumber.Value
-                                            </span>
-                                        </div>
-                                    }
-                                </div>
-                                <div class="col-md-2 text-md-end  mt-md-0">
-                                    <div class="d-flex flex-column gap-2">
-                                        <a asp-action="Create" asp-route-id="@item.JobId"
-                                           class="btn btn-primary btn-lg px-4">
-                                            <i class="fas fa-paper-plane me-2"></i> Apply Now
-                                        </a>
-                                    </div>
-                                </div>
+                        <span class="text-sm font-semibold text-slate-600">
+                            Page @Model.PageNumber of @Model.TotalPages
+                        </span>
+
+                        @if (Model.HasNextPage)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@(Model.PageNumber + 1)"
+                               class="portal-gradient inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-2xl">
+                                Next
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="inline-flex cursor-not-allowed items-center justify-center rounded-2xl bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-500">
+                                Next
+                            </span>
+                        }
+                    </div>
+                }
+            </div>
+
+            @* The listing grid uses even gaps so the page feels orderly and less crowded. *@
+            <div class="grid gap-6 lg:grid-cols-2">
+                @foreach (var item in Model.Jobs)
+                {
+                    // Cleaning the description first gives the preview a stable text rhythm.
+                    var plainDescription = StripHtml(item.JobDescription);
+
+                    // The shorter preview prevents oversized cards and keeps the listing page scannable.
+                    var previewDescription = string.IsNullOrWhiteSpace(plainDescription)
+                        ? "Open the vacancy to review the full role description and application requirements."
+                        : TruncateText(plainDescription, 170);
+
+                    <article class="portal-job-card flex h-full flex-col rounded-[2rem] p-6">
+                        @* The title block is kept simple so the eye lands on the role name first. *@
+                        <div class="space-y-3">
+                            <span class="inline-flex rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+                                Open role
+                            </span>
+                            <h2 class="font-display text-2xl font-bold leading-tight tracking-tight text-slate-950">@item.JobTitle</h2>
+                        </div>
+
+                        @* Consistent line-height solves the uneven text spacing from the previous version. *@
+                        <p class="mt-5 text-sm leading-7 text-slate-600">@previewDescription</p>
+
+                        @* Compact metadata cards keep the information aligned and easy to compare. *@
+                        <div class="mt-6 grid gap-3 sm:grid-cols-3">
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Posted</p>
+                                <p class="mt-2 text-sm font-semibold text-slate-900">@((item.PostedDate ?? DateTime.Today).ToString("MMM dd, yyyy"))</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Deadline</p>
+                                <p class="mt-2 text-sm font-semibold text-slate-900">@((item.ExpiredDate ?? DateTime.Today).ToString("MMM dd, yyyy"))</p>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Positions</p>
+                                <p class="mt-2 text-sm font-semibold text-slate-900">@(item.RequiredNumber ?? 1)</p>
                             </div>
                         </div>
-                    </div>
-                    @{
-                        var isExpired = item.ExpiredDate.HasValue && item.ExpiredDate.Value < DateTime.Now;
-                        var statusClass = isExpired ? "bg-danger" : "bg-success";
-                        var statusText = isExpired ? "Expired" : "Active";
-                    }
-                    <div class="card-footer bg-light p-0">
-                        <div class="d-flex justify-content-between align-items-center px-4 py-2">
-                            <small class="text-muted">
-                                <i class="fas fa-clock me-1"></i>
-                                @if (item.PostedDate.HasValue)
-                                {
-                                    var daysAgo = (DateTime.Now - item.PostedDate.Value).Days;
-                                    <span>Posted @daysAgo day@(daysAgo != 1 ? "s" : "") ago</span>
-                                }
-                            </small>
-                            <span class="badge @statusClass rounded-pill px-3 py-1">
-                                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
-                                @statusText
-                            </span>
+
+                        @* The action row stays minimal and takes candidates straight into the application flow. *@
+                        <div class="mt-6 border-t border-slate-200 pt-6">
+                            @if (appliedJobIds.Contains(item.JobId))
+                            {
+                                <span class="inline-flex cursor-not-allowed items-center justify-center rounded-2xl bg-emerald-100 px-5 py-3 text-sm font-semibold text-emerald-700">
+                                    Applied
+                                </span>
+                            }
+                            else
+                            {
+                                <a asp-controller="AllJobs"
+                                   asp-action="Create"
+                                   asp-route-id="@item.JobId"
+                                   class="portal-gradient inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-2xl">
+                                    Apply now
+                                </a>
+                            }
                         </div>
+                    </article>
+                }
+            </div>
+
+            @if (Model.TotalPages > 1)
+            {
+                <div class="mt-8 flex flex-col items-center justify-between gap-4 rounded-[1.75rem] border border-slate-200 bg-white px-6 py-5 shadow-soft sm:flex-row">
+                    <p class="text-sm leading-7 text-slate-600">
+                        Continue browsing to see the rest of the open roles.
+                    </p>
+
+                    <div class="flex items-center gap-3">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@(Model.PageNumber - 1)"
+                               class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                                Previous
+                            </a>
+                        }
+
+                        @if (Model.HasNextPage)
+                        {
+                            <a asp-action="Index"
+                               asp-route-page="@(Model.PageNumber + 1)"
+                               class="portal-gradient inline-flex items-center justify-center rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-2xl">
+                                Next
+                            </a>
+                        }
                     </div>
                 </div>
+            }
+        }
+        else
+        {
+            @* The empty state uses the same spacing rhythm as the rest of the portal for consistency. *@
+            <div class="portal-surface rounded-[2rem] px-8 py-14 text-center">
+                <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand">No active vacancies</p>
+                <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-slate-950">There are no open roles at the moment.</h2>
+                <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">Please check back later for new opportunities.</p>
             </div>
         }
     </div>
-    @if (!Model.Any())
-    {
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body text-center py-5">
-                        <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
-                        <h4 class="text-muted">No vacancies available</h4>
-                        <p class="text-muted">Check back later for new job opportunities.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</div>
-
-<style>
-    /* Card styling */
-    .card {
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        width: 100% !important;
-        margin: 0;
-    }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-            border-color: #4e73df;
-        }
-
-    .card-body {
-        padding: 1.5rem !important;
-    }
-
-    .card-title {
-        font-weight: 600;
-        color: #2d3748;
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-    }
-
-    /* Job description */
-    .description-text {
-        color: #4a5568;
-        line-height: 1.6;
-    }
-
-    /* Meta information */
-    .job-meta {
-        margin-top: 1rem;
-    }
-
-    .meta-item {
-        font-size: 0.9rem;
-        padding: 0.25rem 0;
-    }
-
-    .badge.bg-primary {
-        background-color: #4e73df !important;
-        padding: 0.25rem 0.75rem;
-    }
-
-    /* Button styling */
-    .btn-primary {
-        background-color: #4e73df;
-        border-color: #4e73df;
-        font-weight: 500;
-    }
-
-        .btn-primary:hover {
-            background-color: #2e59d9;
-            border-color: #2653d4;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(78, 115, 223, 0.3);
-        }
-
-    .btn-outline-secondary {
-        color: #6c757d;
-        border-color: #6c757d;
-        font-weight: 500;
-    }
-
-        .btn-outline-secondary:hover {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: white;
-        }
-
-    /* Status badges */
-    .badge.bg-success {
-        background-color: #1cc88a !important;
-    }
-
-    .badge.bg-danger {
-        background-color: #e74a3b !important;
-    }
-
-    /* Card footer */
-    .card-footer {
-        border-top: 1px solid #f0f0f0;
-        background-color: #f8f9fa !important;
-    }
-
-    /* Responsive adjustments */
-    @@media (max-width: 768px) {
-        .card-body {
-            padding: 1rem !important;
-        }
-
-        .btn-lg {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-        }
-
-        .job-meta {
-            flex-direction: column;
-            gap: 0.5rem !important;
-        }
-    }
-
-    /* Animation for hover effects */
-    .btn, .card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Custom scrollbar for description */
-    .description-text::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .description-text::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    .description-text::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 10px;
-    }
-
-    /* Ensure full width */
-    .col-12 {
-        padding-left: 0;
-        padding-right: 0;
-        width: 100%;
-    }
-
-    .row {
-        margin-left: 0;
-        margin-right: 0;
-    }
-</style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Add click handler for view details buttons
-        document.querySelectorAll('.view-details-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                const jobId = this.getAttribute('data-job-id');
-                // You can implement modal or redirect here
-                window.location.href = `/Jobs/Details/${jobId}`;
-            });
-        });
-
-        // Add hover effects
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function () {
-                this.style.zIndex = '10';
-            });
-
-            card.addEventListener('mouseleave', function () {
-                this.style.zIndex = '1';
-            });
-        });
-    });
-</script>
+</section>

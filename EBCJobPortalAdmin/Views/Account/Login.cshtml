@@ -1,103 +1,106 @@
-﻿@model EBCJobPortalAdmin.ViewModel.UserModel
+@model EBCJobPortalAdmin.ViewModel.AdminLoginViewModel
 @{
     Layout = null;
+    var returnUrl = ViewData["ReturnUrl"] as string;
 }
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/images/rounded_logo-removebg-preview.png">
-    <title>Job portal admin</title>
-   
-    <link href="~/dist/css/style.min.css" rel="stylesheet">
-   
-</head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | EBC Job Portal</title>
+    <meta name="theme-color" content="#023f5b" />
+    <link rel="icon" type="image/png" href="~/assets/images/rounded_logo-removebg-preview.png" />
 
-<body>
-    <div class="main-wrapper">
-        <div class="preloader">
-            <div class="lds-ripple">
-                <div class="lds-pos"></div>
-                <div class="lds-pos"></div>
-            </div>
-        </div>
-        <div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(../assets/images/big/auth-bg.jpg) no-repeat center center;">
-            <div class="auth-box">
-                <div id="loginform">
-                    <div class="logo">
-                        <span class="db"><img style="height:100px; width:100px" src="~/assets/images/rounded_logo-removebg-preview.png" alt="logo" /></span>
-                        <h5 class="font-medium m-b-20">Sign In to Admin</h5>
-                    </div>
-                    <!-- Form -->
-                    <div class="row">
-                        <div class="col-12">
-                            <form class="form-horizontal m-t-20" id="loginform" asp-action="Login">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon1"><i class="ti-user"></i></span>
-                                    </div>
-                                    <input type="text" asp-for="UserName" class="form-control form-control-lg" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
-                                </div>
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="basic-addon2"><i class="ti-pencil"></i></span>
-                                    </div>
-                                    <input type="password" asp-for="Password" class="form-control form-control-lg" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-12">
-                                        <div class="custom-control custom-checkbox">
-                                            <br />
-                                         </div>
-                                    </div>
-                                </div>
-                                <div class="form-group text-center">
-                                    <div class="col-xs-12 p-b-20">
-                                        <button class="btn btn-block btn-lg btn-info" type="submit">Log In</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div id="recoverform">
-                    <div class="logo">
-                        <span class="db"><img style="height:100px; width:100px" src="~/assets/images/rounded_logo-removebg-preview.png" alt="logo" /></span>
-                        <h5 class="font-medium m-b-20">Recover Password</h5>
-                        <span>Enter your Email and instructions will be sent to you!</span>
-                    </div>
-                    <div class="row m-t-20">
-                        <!-- Form -->
-                        <form class="col-12" action="index.html">
-                            <!-- email -->
-                            <div class="form-group row">
-                                <div class="col-12">
-                                    <input class="form-control form-control-lg" type="email" required="" placeholder="Username">
-                                </div>
-                            </div>
-                            <div class="row m-t-20">
-                                <div class="col-12">
-                                    <button class="btn btn-block btn-lg btn-danger" type="submit" name="action">Reset</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/assets/libs/popper.js/dist/umd/popper.min.js"></script>
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    @* Inter keeps the admin login visually aligned with the requested brand typography system. *@
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    @* Tailwind via CDN makes the login page fast to restyle while keeping the markup highly readable. *@
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        $('[data-toggle="tooltip"]').tooltip();
-        $(".preloader").fadeOut();
-        $('#to-recover').on("click", function () {
-            $("#loginform").slideUp();
-            $("#recoverform").fadeIn();
-        });</script>
+        // The login screen shares the same brand palette as the rest of the admin area.
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: "#023f5b",
+                            light: "#0a5f84",
+                            ink: "#012d41"
+                        }
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "system-ui", "sans-serif"]
+                    },
+                    boxShadow: {
+                        soft: "0 24px 60px rgba(2, 63, 91, 0.18)"
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="~/css/admin-portal.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tw-fallback.css" asp-append-version="true" />
+</head>
+<body class="admin-login-page min-h-screen font-sans">
+    @* A light branded backdrop keeps the page airy while still feeling connected to the EBC palette. *@
+    <main class="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
+        <div class="admin-login-backdrop absolute inset-0"></div>
+        <div class="admin-login-overlay absolute inset-0"></div>
+        <div class="absolute -left-24 top-12 h-72 w-72 rounded-full bg-white/60 blur-3xl"></div>
+        <div class="absolute -right-20 bottom-12 h-80 w-80 rounded-full bg-white/40 blur-3xl"></div>
+
+        @* Decorative rings stay very light so they add depth without stealing attention. *@
+        <div class="admin-ring admin-ring--outer"></div>
+        <div class="admin-ring admin-ring--inner"></div>
+
+        @* The centered card uses a subtle glass treatment over a light background to keep the page minimal and premium. *@
+        <div class="admin-login-card relative z-10 w-full max-w-md rounded-2xl p-8 backdrop-blur-2xl sm:p-10">
+            <div class="mb-8 text-center">
+                <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.75rem] border border-slate-200 bg-white shadow-soft">
+                    <img src="~/assets/images/rounded_logo-removebg-preview.png" alt="EBC Logo" class="h-14 w-14 object-contain" />
+                </div>
+                <p class="mt-6 text-xs font-semibold uppercase tracking-[0.08em] text-brand">EBC Job Portal Admin</p>
+                <h1 class="mt-3 text-3xl font-bold tracking-tight text-slate-950">Sign in</h1>
+                <p class="mt-3 text-sm leading-7 text-slate-600">Use your administrator credentials to access the recruitment dashboard.</p>
+            </div>
+
+            <form asp-action="Login" method="post" class="space-y-5">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+                @* Validation summary keeps authentication errors visible without breaking the visual balance. *@
+                <div asp-validation-summary="ModelOnly" class="rounded-2xl border border-red-200/70 bg-red-50/90 px-4 py-3 text-sm text-red-700"></div>
+
+                <div class="space-y-2">
+                    <label asp-for="UserName" class="text-sm font-semibold text-slate-700">Username</label>
+                    <input asp-for="UserName" class="admin-login-input w-full rounded-2xl px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400" placeholder="Enter your username" />
+                    <span asp-validation-for="UserName" class="text-sm text-red-600"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="Password" class="text-sm font-semibold text-slate-700">Password</label>
+                    <input asp-for="Password" class="admin-login-input w-full rounded-2xl px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400" placeholder="Enter your password" />
+                    <span asp-validation-for="Password" class="text-sm text-red-600"></span>
+                </div>
+
+                <label class="admin-login-remember flex items-center gap-3 rounded-2xl px-4 py-3">
+                    <input asp-for="IsRemember" class="h-4 w-4 rounded border-slate-300 text-brand" />
+                    <span class="text-sm font-medium text-slate-700">Keep me signed in</span>
+                </label>
+
+                @* The primary action uses the requested brand gradient for a strong conversion cue. *@
+                <button type="submit" class="admin-login-button w-full rounded-2xl px-4 py-3 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5">
+                    Sign in to Dashboard
+                </button>
+            </form>
+        </div>
+    </main>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
     @await Component.InvokeAsync("NToastNotify")
     @await Component.InvokeAsync("Notyf")
 </body>
+</html>

@@ -1,80 +1,65 @@
-﻿@model EBCJobPortalAdmin.ViewModel.UserModel
+@model EBCJobPortalAdmin.ViewModel.UserModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Admin User";
 }
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Admin users</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">admin users</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Create</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
+<section class="space-y-8">
+    <div class="max-w-3xl space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Access Control</p>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-950">Create admin user</h1>
+        <p class="text-base leading-7 text-slate-600">Add a new administrator with access to the EBC recruitment dashboard.</p>
     </div>
-</div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <form asp-action="Create">
-                    <div class="card-body">
-                        <div class="col-md-8">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="UserName" class="control-label"></label>
-                                <input asp-for="UserName" class="form-control" />
-                                <span asp-validation-for="UserName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="FullName" class="control-label"></label>
-                                <input asp-for="FullName" class="form-control" />
-                                <span asp-validation-for="FullName" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="Password" class="control-label"></label>
-                                <input asp-for="Password" class="form-control" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="ConfirmPassword" class="control-label"></label>
-                                <input asp-for="ConfirmPassword" class="form-control" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="PhoneNumber" class="control-label"></label>
-                                <input asp-for="PhoneNumber" class="form-control" />
-                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="EmailAddress" class="control-label"></label>
-                                <input asp-for="EmailAddress" class="form-control" />
-                                <span asp-validation-for="EmailAddress" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" />
-                            <a asp-action="Index">Back to List</a>
-                        </div>
-                    </div>
-                </form>
+    <div class="admin-card max-w-4xl rounded-[2rem] p-8">
+        <form asp-action="Create" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
+
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="space-y-2">
+                    <label asp-for="UserName" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="UserName" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="UserName" class="text-sm text-red-600"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="FullName" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="FullName" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="FullName" class="text-sm text-red-600"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="EmailAddress" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="EmailAddress" type="email" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="EmailAddress" class="text-sm text-red-600"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="PhoneNumber" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="PhoneNumber" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="PhoneNumber" class="text-sm text-red-600"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="Password" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="Password" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="Password" class="text-sm text-red-600"></span>
+                </div>
+                <div class="space-y-2">
+                    <label asp-for="ConfirmPassword" class="text-sm font-semibold text-slate-700"></label>
+                    <input asp-for="ConfirmPassword" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="ConfirmPassword" class="text-sm text-red-600"></span>
+                </div>
             </div>
-        </div>
+
+            <div class="flex flex-wrap gap-3 pt-2">
+                <button type="submit" class="admin-gradient rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                    Create user
+                </button>
+                <a asp-action="Index" class="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</div>
+</section>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,127 +1,64 @@
-﻿@model EBCJobPortalAdmin.ViewModel.JobModel
+@model EBCJobPortalAdmin.ViewModel.JobModel
 
 @{
-    ViewData["Title"] = "Create Jobs";
+    ViewData["Title"] = "Create Job";
 }
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Vacancies</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">Vacancies</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Vacancies</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
+
+<section class="space-y-8">
+    <div class="max-w-3xl space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Job Management</p>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-950">Post new vacancy</h1>
+        <p class="text-base leading-7 text-slate-600">Publish a new job opening with clear title, description, and deadline details.</p>
     </div>
-</div>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <form asp-action="Create">
-                    <div class="card-body">
-                        <div class="col-md-8">
+    <div class="admin-card max-w-4xl rounded-[2rem] p-8">
+        <form asp-action="Create" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
 
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="form-group">
-                                <label asp-for="JobTitle" class="control-label">Position title</label>
-                                <input asp-for="JobTitle" class="form-control" />
-                                <span asp-validation-for="JobTitle" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="JobDescription" class="control-label">Description</label>
-                                <textarea asp-for="JobDescription" class="form-control"></textarea>
-                                <span asp-validation-for="JobDescription" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="PostedDate" class="control-label">Posted date</label>
-                                <input asp-for="PostedDate" class="form-control" />
-                                <span asp-validation-for="PostedDate" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
-                                <label asp-for="ExpiredDate" class="control-label">Expiry Date</label>
-                                <input asp-for="ExpiredDate" class="form-control" />
-                                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                            <input type="submit" value="Create" class="btn btn-primary" />
-                            <a asp-action="Index">Back to List</a>
-                        </div>
-
-                    </div>
-                </form>
+            <div class="space-y-2">
+                <label asp-for="JobTitle" class="text-sm font-semibold text-slate-700">Position title</label>
+                <input asp-for="JobTitle" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                <span asp-validation-for="JobTitle" class="text-sm text-red-600"></span>
             </div>
-        </div>
+
+            <div class="space-y-2">
+                <label asp-for="JobDescription" class="text-sm font-semibold text-slate-700">Job description</label>
+                <textarea asp-for="JobDescription" rows="10" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10"></textarea>
+                <span asp-validation-for="JobDescription" class="text-sm text-red-600"></span>
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-2">
+                <div class="space-y-2">
+                    <label asp-for="PostedDate" class="text-sm font-semibold text-slate-700">Posted date</label>
+                    <input asp-for="PostedDate" type="datetime-local" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="PostedDate" class="text-sm text-red-600"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="ExpiredDate" class="text-sm font-semibold text-slate-700">Deadline</label>
+                    <input asp-for="ExpiredDate" type="datetime-local" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                    <span asp-validation-for="ExpiredDate" class="text-sm text-red-600"></span>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label asp-for="RequiredNumber" class="text-sm font-semibold text-slate-700">Required positions</label>
+                <input asp-for="RequiredNumber" type="number" min="1" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                <span asp-validation-for="RequiredNumber" class="text-sm text-red-600"></span>
+            </div>
+
+            <div class="flex flex-wrap gap-3 pt-2">
+                <button type="submit" class="admin-gradient rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                    Create job
+                </button>
+                <a asp-action="Index" class="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                    Cancel
+                </a>
+            </div>
+        </form>
     </div>
-</div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-    <script src="~/assets/libs/tinymce/tinymce.min.js"></script>
-    <script>
-        tinymce.init({
-            selector: 'textarea#JobDescription',
-            height: 300,
-            plugins: [
-                "advlist", "anchor", "autolink", "charmap", "code", "fullscreen",
-                "help", "image", "insertdatetime", "link", "lists", "media",
-                "preview", "searchreplace", "table", "visualblocks",
-            ],
-            toolbar: 'undo redo | link image | code',
-            /* enable title field in the Image dialog*/
-            image_title: true,
-            /* enable automatic uploads of images represented by blob or data URIs*/
-            automatic_uploads: true,
-            /*
-              URL of our upload handler (for more details check: https://www.tiny.cloud/docs/configure/file-image-upload/#images_upload_url)
-              images_upload_url: 'postAcceptor.php',
-              here we add custom filepicker only to Image dialog
-            */
-            file_picker_types: 'image',
-            /* and here's our custom image picker*/
-            file_picker_callback: (cb, value, meta) => {
-                const input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-
-                input.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-
-                    const reader = new FileReader();
-                    reader.addEventListener('load', () => {
-                        /*
-                          Note: Now we need to register the blob in TinyMCEs image blob
-                          registry. In the next release this part hopefully won't be
-                          necessary, as we are looking to handle it internally.
-                        */
-                        const id = 'blobid' + (new Date()).getTime();
-                        const blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                        const base64 = reader.result.split(',')[1];
-                        const blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-
-                        /* call the callback and populate the Title field with the file name */
-                        cb(blobInfo.blobUri(), { title: file.name });
-                    });
-                    reader.readAsDataURL(file);
-                });
-
-                input.click();
-            },
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
-        });
-        </script>
 }

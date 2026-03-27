@@ -1,73 +1,51 @@
-﻿@model EBCJobPortalAdmin.Models.TblJobPortalUser
+@model EBCJobPortalAdmin.Models.TblJobPortalUser
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Admin User Details";
 }
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Admin users</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">admin users</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Details</li>
-                    </ol>
-                </nav>
+<section class="space-y-8">
+    <div class="max-w-3xl space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Access Control</p>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-950">Admin user details</h1>
+        <p class="text-base leading-7 text-slate-600">Review the account information and access level for this administrator.</p>
+    </div>
+
+    <div class="admin-card max-w-4xl rounded-[2rem] p-8">
+        <dl class="grid gap-5 md:grid-cols-2">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+                <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Username</dt>
+                <dd class="mt-2 text-sm font-semibold text-slate-900">@Model.UserName</dd>
             </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+                <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Full Name</dt>
+                <dd class="mt-2 text-sm font-semibold text-slate-900">@Model.FullName</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+                <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Phone</dt>
+                <dd class="mt-2 text-sm font-semibold text-slate-900">@(string.IsNullOrWhiteSpace(Model.PhoneNumber) ? "-" : Model.PhoneNumber)</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+                <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Email</dt>
+                <dd class="mt-2 text-sm font-semibold text-slate-900">@(string.IsNullOrWhiteSpace(Model.EmailAdress) ? "-" : Model.EmailAdress)</dd>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 md:col-span-2">
+                <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Access Level</dt>
+                <dd class="mt-2">
+                    <span class="inline-flex rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">
+                        @(Model.IsSuperAdmin == true ? "Super Admin" : "Administrator")
+                    </span>
+                </dd>
+            </div>
+        </dl>
+
+        <div class="flex flex-wrap gap-3 pt-8">
+            <a asp-action="Edit" asp-route-id="@Model.UserId" class="admin-gradient rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                Edit user
+            </a>
+            <a asp-action="Index" class="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                Back to users
+            </a>
         </div>
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                            User name
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.UserName)
-                        </dd>
-                        <dt class="col-sm-2">
-                            Full name
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.FullName)
-                        </dd>
-                        <dt class="col-sm-2">
-                            Phone number
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.PhoneNumber)
-                        </dd>
-                        <dt class="col-sm-2">
-                            Email address
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.EmailAdress)
-                        </dd>
-                        <dt class="col-sm-2">
-                            Is Superadmin?
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.IsSuperAdmin)
-                        </dd>
-                    </dl>
-                </div>
-                <div class="card-footer">
-                    <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
-                    <a asp-action="Index">Back to List</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+</section>

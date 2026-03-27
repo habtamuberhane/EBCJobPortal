@@ -26,15 +26,14 @@ namespace EBCJobPortalAdmin.ViewModel
         [Required(ErrorMessage = "*")]
         [Display(Name = "Phone Number")]
         public string? PhoneNumber { get; set; }
-        [Required(ErrorMessage = "*")]
+
         [Display(Name = "Is Active?")]
         public bool IsActive { get; set; }
+
         public bool IsRemember { get; set; }
-        [Required(ErrorMessage = "*")]
+
         [DataType(DataType.Password)]
         [Display(Name = "New Password")]
         public string? NewPassword { get; set; }
-
-
     }
 }

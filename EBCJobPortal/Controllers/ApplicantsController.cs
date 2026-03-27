@@ -21,8 +21,14 @@ namespace EBCJobPortal.Controllers
         // GET: Applicants
         public async Task<IActionResult> Index()
         {
-            var ebcJobPortalContext = _context.TblApplicants.Include(t => t.Job);
-            return View(await ebcJobPortalContext.ToListAsync());
+            var applicants = await _context.TblApplicants
+                .Include(t => t.Job)
+                .OrderByDescending(t => t.RegistrationDate)
+                .ThenBy(t => t.FullName)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return View(applicants);
         }
 
         // GET: Applicants/Details/5
@@ -45,11 +51,16 @@ namespace EBCJobPortal.Controllers
         }
 
         // GET: Applicants/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            
-            ViewData["JobId"] = new SelectList(_context.TblJobLists, "JobId", "JobId");
-            return View();
+            // The public-facing application journey now lives under AllJobs/Create,
+            // so legacy Applicants/Create requests are redirected into that richer form.
+            if (id.HasValue)
+            {
+                return RedirectToAction("Create", "AllJobs", new { id = id.Value });
+            }
+
+            return RedirectToAction("Index", "AllJobs");
         }
 
         // POST: Applicants/Create

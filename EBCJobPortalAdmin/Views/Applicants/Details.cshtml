@@ -1,204 +1,177 @@
-﻿@model EBCJobPortalAdmin.Models.TblApplicant
+@model EBCJobPortalAdmin.Models.TblApplicant
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Applicant Details";
+
+    string FormatValue(string? value, string fallback = "Not provided")
+    {
+        return string.IsNullOrWhiteSpace(value) ? fallback : value;
+    }
 }
 
-<h1>Details</h1>
+<section class="space-y-8">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl space-y-3">
+            <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Applicant Review</p>
+            <h1 class="text-4xl font-bold tracking-tight text-slate-950">@FormatValue(Model.FullName, "Applicant")</h1>
+            <p class="text-base leading-7 text-slate-600">Review the full submission, attached CV, and the applicant's academic and experience profile in one place.</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            @if (!string.IsNullOrWhiteSpace(Model.Cvfile))
+            {
+                <a asp-action="DocumentViewer"
+                   asp-controller="DocumentViewer"
+                   asp-route-path="@Model.Cvfile"
+                   asp-route-methodController="Applicants"
+                   asp-route-method="Details"
+                   class="admin-gradient inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                    Open CV
+                </a>
+            }
+            <a asp-action="Index" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                Back to Applicants
+            </a>
+        </div>
+    </div>
 
-<div>
-    <h4>TblApplicant</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FullName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FullName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nation)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AreYouDisable)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AreYouDisable)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReasonForDisablity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReasonForDisablity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Regid)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Regid)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ZoneSubcity)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ZoneSubcity)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Worede)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Worede)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HouseNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HouseNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MaritalStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MaritalStatus)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RegistrationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CurrentWorkingCompany)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CurrentWorkingCompany)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PositionTitle)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PositionTitle)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MonthlySalary)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MonthlySalary)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RequirementDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RequirementDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyPhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyPhoneNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyPostNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyPostNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IfNojobcurrently)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IfNojobcurrently)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ResignationationReson)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ResignationationReson)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ResignationDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ResignationDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NumberofExprianceYears)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NumberofExprianceYears)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationLevel)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EducationLevel)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EducationField)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EducationField)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Institution)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Institution)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GraduationYear)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GraduationYear)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cgpa)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cgpa)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CvShorttermTranings)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CvShorttermTranings)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cvfile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cvfile)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Job)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Job.JobId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ApplyId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="grid gap-6 xl:grid-cols-3">
+        <div class="space-y-6 xl:col-span-2">
+            <div class="admin-card rounded-[2rem] p-6">
+                <div class="flex flex-wrap gap-2">
+                    <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">@FormatValue(Model.Gender, "Gender n/a")</span>
+                    <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">@FormatValue(Model.MaritalStatus, "Status n/a")</span>
+                    @if (Model.AreYouDisable == true)
+                    {
+                        <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">Disability disclosed</span>
+                    }
+                </div>
+                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Phone number</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.PhoneNumber)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Primary contact</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.PhoneNumber)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Nationality</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.Nation)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Date of birth</p>
+                        <p class="text-base text-slate-900">@(Model.BirthDate?.ToString("MMM dd, yyyy") ?? "Not provided")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card rounded-[2rem] p-6">
+                <h2 class="text-xl font-bold tracking-tight text-slate-950">Application Snapshot</h2>
+                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Applied vacancy</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.Job?.JobTitle)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Submitted on</p>
+                        <p class="text-base text-slate-900">@(Model.RegistrationDate?.ToString("MMM dd, yyyy") ?? "Not provided")</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Region</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.Reg?.RegionName)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Address</p>
+                        <p class="text-base text-slate-900">@($"{FormatValue(Model.ZoneSubcity)}{(string.IsNullOrWhiteSpace(Model.Worede) ? string.Empty : $" / {Model.Worede}")}{(string.IsNullOrWhiteSpace(Model.HouseNumber) ? string.Empty : $" / House {Model.HouseNumber}")}")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card rounded-[2rem] p-6">
+                <h2 class="text-xl font-bold tracking-tight text-slate-950">Academic Background</h2>
+                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Education level</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.EducationLevel)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Area of study</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.EducationField)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Institution</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.Institution)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Graduation year</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.GraduationYear)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">CGPA</p>
+                        <p class="text-base text-slate-900">@(Model.Cgpa?.ToString("0.00") ?? "Not provided")</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card rounded-[2rem] p-6">
+                <h2 class="text-xl font-bold tracking-tight text-slate-950">Experience</h2>
+                <div class="mt-6 grid gap-6 md:grid-cols-2">
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Years of experience</p>
+                        <p class="text-base text-slate-900">@(Model.NumberofExprianceYears?.ToString() ?? "Not provided")</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Current or last employer</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.CurrentWorkingCompany)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Position title</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.PositionTitle)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Monthly salary</p>
+                        <p class="text-base text-slate-900">@(Model.MonthlySalary?.ToString("N2") ?? "Not provided")</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Company phone number</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.CompanyPhoneNumber)</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-sm font-semibold text-slate-500">Company post number</p>
+                        <p class="text-base text-slate-900">@FormatValue(Model.CompanyPostNumber)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="admin-card rounded-[2rem] p-6">
+                <h2 class="text-xl font-bold tracking-tight text-slate-950">Quick Summary</h2>
+                <div class="mt-6 space-y-4">
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-sm font-semibold text-slate-500">Disability note</p>
+                        <p class="mt-2 text-sm leading-7 text-slate-700">@FormatValue(Model.ReasonForDisablity)</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-sm font-semibold text-slate-500">Short-term training</p>
+                        <p class="mt-2 text-sm leading-7 text-slate-700">@FormatValue(Model.CvShorttermTranings)</p>
+                    </div>
+                    <div class="rounded-2xl bg-slate-50 p-4">
+                        <p class="text-sm font-semibold text-slate-500">Preferred job location</p>
+                        <p class="mt-2 text-sm leading-7 text-slate-700">@FormatValue(Model.JobLocation)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-card rounded-[2rem] p-6">
+                <h2 class="text-xl font-bold tracking-tight text-slate-950">Record Actions</h2>
+                <div class="mt-6 flex flex-col gap-3">
+                    <a asp-action="Delete" asp-route-id="@Model.ApplyId" class="inline-flex items-center justify-center rounded-2xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                        Delete Applicant
+                    </a>
+                    <p class="text-sm leading-7 text-slate-500">Editing is intentionally disabled to preserve the applicant's original submission.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

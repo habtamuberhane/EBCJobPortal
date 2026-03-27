@@ -59,12 +59,15 @@ namespace EBCJobPortal
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions
+            var adminPath = Path.Combine(builder.Environment.ContentRootPath, "admin");
+            if (Directory.Exists(adminPath))
             {
-                FileProvider = new PhysicalFileProvider(
-                   Path.Combine(builder.Environment.ContentRootPath, "admin")),
-                RequestPath = "/admin"
-            });
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(adminPath),
+                    RequestPath = "/admin"
+                });
+            }
             app.UseSession();
             app.UseRouting();
             app.UseAuthorization();

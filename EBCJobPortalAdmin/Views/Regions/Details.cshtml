@@ -1,49 +1,29 @@
-﻿@model EBCJobPortalAdmin.Models.TblRegion
+@model EBCJobPortalAdmin.Models.TblRegion
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Region Details";
 }
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Regions</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">Regions</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Details</li>
-                    </ol>
-                </nav>
-            </div>
+<section class="space-y-8">
+    <div class="max-w-3xl space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Locations</p>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-950">Region details</h1>
+        <p class="text-base leading-7 text-slate-600">Review the region entry before editing or removing it.</p>
+    </div>
+
+    <div class="admin-card max-w-3xl rounded-[2rem] p-8">
+        <dl class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4">
+            <dt class="text-xs font-semibold uppercase tracking-[0.06em] text-slate-500">Region Name</dt>
+            <dd class="mt-2 text-sm font-semibold text-slate-900">@Model.RegionName</dd>
+        </dl>
+
+        <div class="flex flex-wrap gap-3 pt-8">
+            <a asp-action="Edit" asp-route-id="@Model.Regid" class="admin-gradient rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5">
+                Edit region
+            </a>
+            <a asp-action="Index" class="rounded-2xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                Back to regions
+            </a>
         </div>
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <dl class="row">
-                        <dt class="col-sm-2">
-                           Name
-                        </dt>
-                        <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.RegionName)
-                        </dd>
-                    </dl>
-                </div>
-            </div>
-            <div class="card-footer">
-                <a asp-action="Edit" asp-route-id="@Model?.Regid">Edit</a> |
-                <a asp-action="Index">Back to List</a>
-            </div>
-        </div>
-    </div>
-</div>
-
+</section>

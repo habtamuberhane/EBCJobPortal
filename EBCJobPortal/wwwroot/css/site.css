@@ -1,22 +1,20 @@
 html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+  /* The base font size remains conservative so Tailwind typography scales predictably. */
+  font-size: 16px;
 }
 
 body {
-  margin-bottom: 60px;
+  /* Resetting margin avoids the old footer spacing hack interfering with the new flex layout. */
+  margin: 0;
+}
+
+a {
+  /* Removing default underline lets the bespoke navigation and CTA styling read more cleanly. */
+  text-decoration: none;
+}
+
+img {
+  /* Responsive image defaults help logos and media scale safely inside the new fluid layout. */
+  max-width: 100%;
+  display: block;
 }

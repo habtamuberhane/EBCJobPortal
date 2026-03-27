@@ -1,0 +1,220 @@
+:root {
+    --admin-primary: #023f5b;
+    --admin-primary-light: #0a5f84;
+    --admin-primary-ink: #012d41;
+    --admin-surface: #ffffff;
+    --admin-surface-soft: rgba(255, 255, 255, 0.84);
+    --admin-border: rgba(148, 163, 184, 0.18);
+    --admin-text: #0f172a;
+    --admin-muted: #475569;
+    --admin-gradient: linear-gradient(135deg, #023f5b 0%, #0a5f84 100%);
+    --admin-shadow-soft: 0 24px 60px rgba(2, 63, 91, 0.12);
+    --admin-shadow-card: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.admin-body {
+    background:
+        radial-gradient(circle at top left, rgba(10, 95, 132, 0.08), transparent 30%),
+        linear-gradient(180deg, #f8fbfd 0%, #f8fafc 42%, #ffffff 100%);
+    color: var(--admin-text);
+    font-family: "Inter", system-ui, sans-serif;
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.admin-body,
+body.admin-body * {
+    box-sizing: border-box;
+}
+
+body.admin-body {
+    overflow-x: hidden;
+}
+
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+    appearance: none;
+    border: 0;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(2, 63, 91, 0.1);
+}
+
+body.admin-body h1,
+body.admin-body h2,
+body.admin-body h3,
+body.admin-body h4,
+body.admin-body h5,
+body.admin-body h6 {
+    letter-spacing: -0.03em;
+}
+
+.admin-gradient {
+    background-image: var(--admin-gradient);
+}
+
+.admin-surface {
+    background: var(--admin-surface-soft);
+    border: 1px solid var(--admin-border);
+    box-shadow: var(--admin-shadow-soft);
+    backdrop-filter: blur(18px);
+}
+
+.admin-card {
+    background: var(--admin-surface);
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: var(--admin-shadow-card);
+    overflow-wrap: anywhere;
+}
+
+.admin-sidebar-link {
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.admin-sidebar-link:hover {
+    transform: translateX(2px);
+}
+
+.admin-app-shell {
+    width: 100%;
+    align-items: stretch;
+}
+
+.admin-main-column {
+    min-width: 0;
+}
+
+.admin-main-content {
+    width: 100%;
+    max-width: 1260px;
+    margin: 0 auto;
+}
+
+.admin-table-shell {
+    border-radius: 2rem;
+    overflow: hidden;
+}
+
+.admin-table-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.admin-data-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.admin-data-table th,
+.admin-data-table td {
+    vertical-align: top;
+    white-space: normal;
+}
+
+.admin-filter-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .admin-filter-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1280px) {
+    .admin-filter-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+.admin-ring {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px solid rgba(2, 63, 91, 0.08);
+    animation: adminRingFade 4.6s ease-out infinite;
+}
+
+.admin-ring--outer {
+    inset: 22%;
+}
+
+.admin-ring--inner {
+    inset: 30%;
+    animation-delay: 1.1s;
+}
+
+.admin-login-backdrop {
+    background:
+        radial-gradient(circle at top left, rgba(10, 95, 132, 0.14), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(2, 63, 91, 0.08), transparent 28%),
+        linear-gradient(180deg, #f8fbfd 0%, #f6fafc 52%, #ffffff 100%);
+}
+
+.admin-login-overlay {
+    background-image:
+        radial-gradient(circle at center, rgba(255, 255, 255, 0.5), transparent 40%);
+}
+
+.admin-login-card {
+    background: rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08);
+}
+
+.admin-login-button {
+    background-image: linear-gradient(135deg, #023f5b 0%, #0a5f84 100%);
+    box-shadow: 0 20px 45px rgba(2, 63, 91, 0.35);
+}
+
+.admin-login-page {
+    color: var(--admin-text);
+}
+
+.admin-login-input {
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.admin-login-input:focus {
+    border-color: rgba(2, 63, 91, 0.4);
+    box-shadow: 0 0 0 4px rgba(2, 63, 91, 0.08);
+}
+
+.admin-login-remember {
+    background: rgba(255, 255, 255, 0.36);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+@keyframes adminRingFade {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    22% {
+        opacity: 0.72;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}

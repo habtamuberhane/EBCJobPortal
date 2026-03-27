@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
@@ -9,8 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace EBCJobPortal.Controllers
 {
@@ -32,29 +31,40 @@ namespace EBCJobPortal.Controllers
         }
 
         // GET: AllJobs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            string domains = _configuration.GetSection("mySettings:url").Value;
+            string domains = _configuration.GetSection("mySettings:url").Value ?? string.Empty;
+            const int pageSize = VacanciesIndexViewModel.DefaultPageSize;
+            var normalizedPage = page < 1 ? 1 : page;
+            var activeJobsQuery = _context
+                .TblJobLists.Where(s => !s.ExpiredDate.HasValue || s.ExpiredDate >= DateTime.Now.Date);
+            var totalJobs = await activeJobsQuery.CountAsync();
+            var jobs = await activeJobsQuery
+                    .OrderByDescending(s => s.PostedDate ?? DateTime.MinValue)
+                    .ThenByDescending(s => s.JobId)
+                    .Skip((normalizedPage - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
 
-            ViewBag.title = "Vacancies: ክፍት የሥራ ማስተወቂያ";
-            ViewBag.description = "Vacancies: ክፍት የሥራ ማስተወቂያ";
-            ViewBag.keywords = "Vacancies: ክፍት የሥራ ማስተወቂያ,";
+            ViewBag.title = "Open Vacancies";
+            ViewBag.description = "Explore current job opportunities at Ethiopian Broadcasting Corporation.";
+            ViewBag.keywords = "EBC jobs, open vacancies, Ethiopian Broadcasting Corporation careers";
             ViewBag.url = domains + "/AllJobs/Index";
             ViewBag.image = domains + "/assets/vacancy_2.jpg";
             ViewBag.canonical = domains + "/AllJobs/Index";
             ViewBag.facebooktag = domains + "/assets/vacancy_2.jpg";
-            return View(
-                await _context
-                    .TblJobLists.Where(s => s.ExpiredDate > DateTime.Now.Date).OrderByDescending(s => s.JobId)
-                    .ToListAsync()
-            );
+            return View(new VacanciesIndexViewModel
+            {
+                Jobs = jobs,
+                PageNumber = normalizedPage,
+                PageSize = pageSize,
+                TotalJobs = totalJobs
+            });
         }
 
-        public async Task<IActionResult> ExpiredJobs()
+        public IActionResult ExpiredJobs()
         {
-            return View(
-                await _context.TblJobLists.Where(s => s.ExpiredDate < DateTime.Now).ToListAsync()
-            );
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: AllJobs/Details/5
@@ -75,28 +85,26 @@ namespace EBCJobPortal.Controllers
         }
 
         // GET: AllJobs/Create
-        public IActionResult Create(int id)
+        public async Task<IActionResult> Create(int id)
         {
+            var job = await _context.TblJobLists
+                .AsNoTracking()
+                .FirstOrDefaultAsync(jobItem => jobItem.JobId == id && (!jobItem.ExpiredDate.HasValue || jobItem.ExpiredDate >= DateTime.Now.Date));
 
-            ApplicantModel model = new ApplicantModel();
-            model.JobId = id;
-            model.BirthDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-18));
-            model.Regions = _context
-                .TblRegions.Select(s => new SelectListItem
-                {
-                    Value = s.Regid.ToString(),
-                    Text = s.RegionName,
-                })
-                .ToList();
-            List<RegionModel> regionModels = new List<RegionModel>
+            if (job is null)
             {
-                new RegionModel { LocName = "ደሴ" },
-                new RegionModel { LocName = "ሐዋሳ" },
-                new RegionModel { LocName = "ቦንጋ" },
+                _notifyService.Error("The selected vacancy is no longer available.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var model = new ApplicantModel
+            {
+                JobId = id,
+                JobTitle = job.JobTitle,
+                BirthDate = DateOnly.FromDateTime(DateTime.Now.AddYears(-18))
             };
-            model.JobLocations = regionModels
-                .Select(r => new SelectListItem { Value = r.LocName, Text = r.LocName })
-                .ToList();
+
+            await PopulateApplicantSelectionsAsync(model);
             return View(model);
         }
 
@@ -105,8 +113,43 @@ namespace EBCJobPortal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Create(ApplicantModel applicantModel)
         {
+            var job = await _context.TblJobLists
+                .AsNoTracking()
+                .FirstOrDefaultAsync(jobItem => jobItem.JobId == applicantModel.JobId && (!jobItem.ExpiredDate.HasValue || jobItem.ExpiredDate >= DateTime.Now.Date));
+
+            if (job is null)
+            {
+                _notifyService.Error("The selected vacancy is no longer available.");
+                return RedirectToAction(nameof(Index));
+            }
+
+            applicantModel.JobTitle = job.JobTitle;
+
+            if (!ModelState.IsValid)
+            {
+                await PopulateApplicantSelectionsAsync(applicantModel);
+                ViewData["FormStatus"] = "warning";
+                ViewData["FormMessage"] = "Please complete all required fields before submitting your application.";
+                _notifyService.Warning("Please complete all required fields before submitting your application.");
+                return View(applicantModel);
+            }
+
             try
             {
+                var fileExtension = string.Empty;
+                if (applicantModel.Cvfile is not null && applicantModel.Cvfile.Length > 0)
+                {
+                    fileExtension = Path.GetExtension(applicantModel.Cvfile.FileName);
+                    if (!string.Equals(fileExtension, ".pdf", StringComparison.OrdinalIgnoreCase))
+                    {
+                        await PopulateApplicantSelectionsAsync(applicantModel);
+                        ViewData["FormStatus"] = "error";
+                        ViewData["FormMessage"] = "Only PDF files are allowed for the CV upload.";
+                        _notifyService.Error("Only PDF files are allowed for the CV upload.");
+                        return View(applicantModel);
+                    }
+                }
+
                 TblApplicant applicants = new TblApplicant();
                 applicants.JobId = applicantModel.JobId;
                 applicants.Cgpa = applicantModel.Cgpa;
@@ -114,15 +157,8 @@ namespace EBCJobPortal.Controllers
                 applicants.Gender = applicantModel.Gender;
                 applicants.Nation = applicantModel.Nation;
                 applicants.RegistrationDate = DateTime.Now;
-                if (applicantModel.Disable.ToString() == "Yes")
-                {
-                    applicants.AreYouDisable = true;
-                    applicants.ReasonForDisablity = applicantModel.Nation;
-                }
-                else
-                {
-                    applicants.AreYouDisable = false;
-                }
+                applicants.AreYouDisable = string.Equals(applicantModel.Disable, "Yes", StringComparison.OrdinalIgnoreCase);
+                applicants.ReasonForDisablity = null;
                 applicants.CurrentWorkingCompany = applicantModel.CurrentWorkingCompany;
                 applicants.NumberofExprianceYears = applicantModel.NumberofExprianceYears;
                 applicants.GraduationYear = applicantModel.GraduationYear;
@@ -133,65 +169,64 @@ namespace EBCJobPortal.Controllers
                 applicants.HouseNumber = applicantModel.HouseNumber;
                 applicants.ZoneSubcity = applicantModel.ZoneSubcity;
                 applicants.Regid = applicantModel.Regid;
-                applicants.Gender = applicantModel.Gender;
                 applicants.Worede = applicantModel.Worede;
                 applicants.MaritalStatus = applicantModel.MaritalStatus;
                 applicants.PositionTitle = applicantModel.PositionTitle;
                 applicants.EducationLevel = applicantModel.EducationLevel;
-                applicants.CvShorttermTranings = applicantModel.CvShorttermTranings;
                 applicants.EducationField = applicantModel.EducationField;
-                applicants.JobLocation = applicantModel.LocName;
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "admin/Files");
+                // Save directly to the sibling Admin project's shared file library.
+                // The admin app serves /Files from its root-level Files folder, so uploads must land there.
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "..", "EBCJobPortalAdmin", "Files");
 
-                //create folder if not exist
                 if (!Directory.Exists(path))
-                    Directory.CreateDirectory(path);
-
-                //get file extension
-                FileInfo fileInfo = new FileInfo(applicantModel.Cvfile.FileName);
-                string fileName = Guid.NewGuid().ToString() + applicantModel.Cvfile.FileName;
-                string fileNameWithPath = Path.Combine(path, fileName);
-                using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
                 {
-                    applicantModel.Cvfile.CopyTo(stream);
+                    Directory.CreateDirectory(path);
                 }
-                string dbPath = "/admin/Files/" + fileName;
-                applicants.Cvfile = dbPath;
+
+                if (applicantModel.Cvfile is not null && applicantModel.Cvfile.Length > 0)
+                {
+                    string fileName = $"{Guid.NewGuid():N}{fileExtension.ToLowerInvariant()}";
+                    string fileNameWithPath = Path.Combine(path, fileName);
+                    await using (var stream = new FileStream(fileNameWithPath, FileMode.Create))
+                    {
+                        await applicantModel.Cvfile.CopyToAsync(stream);
+                    }
+                    // Store path relative to the Admin base URL (e.g., /Files/filename.pdf)
+                    string dbPath = "/Files/" + fileName;
+                    applicants.Cvfile = dbPath;
+                }
+
                 _context.TblApplicants.Add(applicants);
                 int saved = await _context.SaveChangesAsync();
                 if (saved > 0)
                 {
-                    _notifyService.Success("Your application is successfully submited");
+                    if (applicantModel.JobId.HasValue)
+                    {
+                        MarkJobAsApplied(applicantModel.JobId.Value);
+                    }
+
+                    TempData["ApplicationStatus"] = "success";
+                    TempData["ApplicationMessage"] = $"Application submitted successfully for {job.JobTitle}.";
+                    _notifyService.Success("Application submitted successfully.");
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    applicantModel.Regions = _context
-                        .TblRegions.Select(s => new SelectListItem
-                        {
-                            Value = s.Regid.ToString(),
-                            Text = s.RegionName,
-                        })
-                        .ToList();
+                    await PopulateApplicantSelectionsAsync(applicantModel);
+                    ViewData["FormStatus"] = "error";
+                    ViewData["FormMessage"] = "Your application could not be submitted. Please try again.";
                     _notifyService.Error(
                         "Your application isn't successfully submitted. Please try again."
                     );
                     return View(applicantModel);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                applicantModel.Regions = _context
-                    .TblRegions.Select(s => new SelectListItem
-                    {
-                        Value = s.Regid.ToString(),
-                        Text = s.RegionName,
-                    })
-                    .ToList();
-                _notifyService.Error(
-                    ex.Message
-                        + " happened. Your application isn't successfully submitted. Please try again."
-                );
+                await PopulateApplicantSelectionsAsync(applicantModel);
+                ViewData["FormStatus"] = "error";
+                ViewData["FormMessage"] = "Your application could not be submitted. Please try again.";
+                _notifyService.Error("Your application could not be submitted. Please try again.");
                 return View(applicantModel);
             }
         }
@@ -283,6 +318,64 @@ namespace EBCJobPortal.Controllers
         private bool TblJobListExists(int id)
         {
             return _context.TblJobLists.Any(e => e.JobId == id);
+        }
+
+        private void MarkJobAsApplied(int jobId)
+        {
+            var appliedJobIds = GetAppliedJobIds();
+            appliedJobIds.Add(jobId);
+
+            HttpContext.Session.SetString("AppliedJobs", string.Join(",", appliedJobIds.OrderBy(id => id)));
+        }
+
+        private HashSet<int> GetAppliedJobIds()
+        {
+            var sessionValue = HttpContext.Session.GetString("AppliedJobs");
+
+            if (string.IsNullOrWhiteSpace(sessionValue))
+            {
+                return new HashSet<int>();
+            }
+
+            return sessionValue
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(value => int.TryParse(value, out var parsedId) ? parsedId : (int?)null)
+                .Where(parsedId => parsedId.HasValue)
+                .Select(parsedId => parsedId!.Value)
+                .ToHashSet();
+        }
+
+        private async Task PopulateApplicantSelectionsAsync(ApplicantModel model)
+        {
+            model.Regions = await _context.TblRegions
+                .AsNoTracking()
+                .OrderBy(region => region.RegionName)
+                .Select(region => new SelectListItem
+                {
+                    Value = region.Regid.ToString(),
+                    Text = region.RegionName,
+                })
+                .ToListAsync();
+
+            model.Nations = new List<SelectListItem>
+            {
+                new() { Value = "Ethiopian", Text = "Ethiopian" },
+                new() { Value = "Eritrean", Text = "Eritrean" },
+                new() { Value = "Kenyan", Text = "Kenyan" },
+                new() { Value = "Somali", Text = "Somali" },
+                new() { Value = "South Sudanese", Text = "South Sudanese" },
+                new() { Value = "Sudanese", Text = "Sudanese" },
+                new() { Value = "Other", Text = "Other" }
+            };
+
+            model.EducationLevels = new List<SelectListItem>
+            {
+                new() { Value = "Diploma", Text = "Diploma" },
+                new() { Value = "Advanced Diploma", Text = "Advanced Diploma" },
+                new() { Value = "Bachelor's Degree", Text = "Bachelor's Degree" },
+                new() { Value = "Master's Degree", Text = "Master's Degree" },
+                new() { Value = "PhD", Text = "PhD" }
+            };
         }
     }
 

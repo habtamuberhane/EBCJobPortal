@@ -3,17 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EBCJobPortalAdmin.Models;
-using EBCJobPortalAdmin.Filters;
 using System.Collections.Generic;
 using EBCJobPortalAdmin.Security;
 using EBCJobPortalAdmin.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EBCJobPortalAdmin.Controllers
 {
-    [CheckSessionIsAvailable]
+    [Authorize]
     public class AdminlUsersController : Controller
     {
         private readonly EbcJobPortalContext _context;
@@ -59,10 +59,21 @@ namespace EBCJobPortalAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UserModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError(nameof(model.Password), "Password is required.");
+                return View(model);
+            }
+
             try
             {
                 TblJobPortalUser user = new TblJobPortalUser();
-                var userExist=_context.TblJobPortalUsers.Where(m => m.UserName == model.UserName).Any();
+                var userExist = await _context.TblJobPortalUsers.AnyAsync(m => m.UserName == model.UserName);
                 if (userExist)
                 {
                     _notifyService.Warning("Username already exists. Please try another one");
@@ -113,7 +124,6 @@ namespace EBCJobPortalAdmin.Controllers
             UserModel userModel = new UserModel();
             userModel.UserId=tblJobPortalUser.UserId;
             userModel.UserName=tblJobPortalUser.UserName;
-            userModel.Password=tblJobPortalUser.PassWord;
             userModel.FullName=tblJobPortalUser.FullName;
             userModel.EmailAddress=tblJobPortalUser.EmailAdress;
             userModel.PhoneNumber=tblJobPortalUser.PhoneNumber;
@@ -128,9 +138,14 @@ namespace EBCJobPortalAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(UserModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             try
             {
-                TblJobPortalUser jobPortalUser = _context.TblJobPortalUsers.Find(model.UserId);
+                TblJobPortalUser? jobPortalUser = await _context.TblJobPortalUsers.FindAsync(model.UserId);
                 if (jobPortalUser==null)
                 {
                     return NotFound();
@@ -139,7 +154,10 @@ namespace EBCJobPortalAdmin.Controllers
                 jobPortalUser.PhoneNumber=model.PhoneNumber;
                 jobPortalUser.FullName=model.FullName;
                 jobPortalUser.EmailAdress=model.EmailAddress;
-                jobPortalUser.PassWord=PawwordEncryption.EncryptPasswordBase64Strig(model.Password);
+                if (!string.IsNullOrWhiteSpace(model.Password))
+                {
+                    jobPortalUser.PassWord=PawwordEncryption.EncryptPasswordBase64Strig(model.Password);
+                }
                 jobPortalUser.IsSuperAdmin=true;
                 int updated=await _context.SaveChangesAsync();
                 if (updated>0)

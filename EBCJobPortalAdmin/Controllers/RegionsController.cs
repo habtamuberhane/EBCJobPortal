@@ -3,14 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EBCJobPortalAdmin.Models;
-using EBCJobPortalAdmin.Filters;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EBCJobPortalAdmin.Controllers
 {
-    [CheckSessionIsAvailable]
+    [Authorize]
     public class RegionsController : Controller
     {
         private readonly EbcJobPortalContext _context;

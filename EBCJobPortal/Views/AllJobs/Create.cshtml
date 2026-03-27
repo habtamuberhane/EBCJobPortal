@@ -1,311 +1,229 @@
-﻿@model EBCJobPortal.ViewModel.ApplicantModel
+@model EBCJobPortal.ViewModel.ApplicantModel
+
 @{
-
+    ViewData["Title"] = "Apply";
+    ViewData["Description"] = "Complete your application for the selected EBC vacancy.";
+    var formStatus = ViewData["FormStatus"] as string;
+    var formMessage = ViewData["FormMessage"] as string;
 }
-<style>
-    .nav-pills.custom-pills .nav-link.active {
-        color: #ffffff;
-        opacity: 1;
-        background-color: #2962FF;
-        border-bottom: 2px solid #2962FF;
-    }
-</style>
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Vacancy</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="#">Vacancy</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Apply</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body wizard-content">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
-                        <input type="hidden" asp-for="JobId">
-                        <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true"><h5>Personal Info </h5></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#last-month" role="tab" aria-controls="pills-profile" aria-selected="false"><h5>Location </h5> </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#previous-month" role="tab" aria-controls="pills-setting" aria-selected="false"><h5>Education Background </h5> </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="pills-expriance-tab" data-toggle="pill" href="#expriance" role="tab" aria-controls="pills-expriance" aria-selected="false"><h5>Expriance Info (If you have any expriance else make it 0) </h5> </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content" id="pills-tabContent">
-                            <div class="tab-pane fade show active" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
-                                <div class="card-body">
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="firstName1">Full Name :</label>
-                                                    <input type="text" asp-for="FullName" class="form-control" id="firstName1">
-                                                    <span asp-validation-for="FullName" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Gender :</label>
-                                                    <div class="c-inputs-stacked">
-                                                        @foreach (var gender in Model.Genders)
-                                                        {
-                                                            <div class="custom-control custom-radio custom-control-inline">
-                                                                <input type="radio" asp-for="Gender" value="@gender" />@gender<br />
-                                                            </div>
-                                                        }
-                                                        <span asp-validation-for="Gender" class="text-danger"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="phoneNumber1">Phone Number :</label>
-                                                    <input type="number" asp-for="PhoneNumber" class="form-control" id="phoneNumber1">
-                                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="emailAddress1">Email Address :</label>
-                                                    <input type="email" asp-for="EmailAddress" class="form-control" id="emailAddress1">
-                                                    <span asp-validation-for="EmailAddress" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="date1">Date of Birth :</label>
-                                                    <input type="date" asp-for="BirthDate" class="form-control" id="date1">
-                                                    <span asp-validation-for="BirthDate" class="text-danger"></span>
+<section class="pb-20 pt-14">
+    <div class="portal-application-shell mx-auto w-full px-4 sm:px-6 lg:px-8">
+        <div class="portal-application-card rounded-[2rem] px-6 py-8 sm:px-8">
+            <div class="flex flex-col gap-6 border-b border-slate-200 pb-8 lg:flex-row lg:items-end lg:justify-between">
+                <div class="max-w-3xl space-y-3">
+                    <p class="text-sm font-semibold uppercase tracking-[0.12em] text-brand">Application Form</p>
+                    <h1 class="font-display text-4xl font-bold tracking-tight text-slate-950">Apply for @Model.JobTitle</h1>
+                    <p class="text-base leading-7 text-slate-600">Complete the form carefully and submit your application. You can optionally attach one combined PDF with your CV and supporting credentials.</p>
+                </div>
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="location1">Marital status :</label>
-                                                    <div class="c-inputs-stacked">
-                                                        @foreach (var status in Model.MaritalStatuses)
-                                                        {
-                                                            <div class="custom-control custom-radio custom-control-inline">
-                                                                <input type="radio" asp-for="MaritalStatus" value="@status" />@status<br />
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                    <span asp-validation-for="MaritalStatus" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="date1">Any Disability :</label>
-                                                    <div class="c-inputs-stacked">
-                                                        @foreach (var disable in Model.Disablities)
-                                                        {
-                                                            <div class="custom-control custom-radio custom-control-inline">
-                                                                <input type="radio" asp-for="Disable" value="@disable" />@disable<br />
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                    <span asp-validation-for="Disable" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="date1">If any disability(Reason for disability):</label>
-                                                    <textarea id="text-3" rows="5" asp-for="ReasonForDisablity" class="form-control"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="last-month" role="tabpanel" aria-labelledby="pills-profile-tab">
-                                <div class="card-body">
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="jobTitle1">Nation :</label>
-                                                    <input type="text" asp-for="Nation" class="form-control" id="jobTitle1">
-                                                    <span asp-validation-for="Nation" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="videoUrl1">Region :</label>
-                                                    @Html.DropDownListFor(model => model.Regid, new SelectList(Model.Regions, "Value", "Text"), htmlAttributes: new { @class = "custom-select form-control" })
-                                                    <span asp-validation-for="Regid" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="shortDescription1">Sub-City/Zone :</label>
-                                                    <input type="text" asp-for="ZoneSubcity" class="form-control" id="ZoneSubcity1">
-                                                    <span asp-validation-for="ZoneSubcity" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="jobTitle1">Worede :</label>
-                                                    <input type="text" asp-for="Worede" class="form-control" id="Worede1">
-                                                    <span asp-validation-for="Worede" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="jobTitle1">House No.:</label>
-                                                    <input type="text" asp-for="HouseNumber" class="form-control" id="HouseNumber1">
-                                                    <span asp-validation-for="HouseNumber" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="previous-month" role="tabpanel" aria-labelledby="pills-setting-tab">
-                                <div class="card-body">
-
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="int1">Field of Study:</label>
-                                                    <input type="text" asp-for="EducationField" class="form-control">
-                                                    <span asp-validation-for="EducationField" class="text-danger"></span>
-
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="int1">Level of Study:</label>
-                                                    <input type="text" asp-for="EducationLevel" class="form-control">
-                                                    <span asp-validation-for="EducationLevel" class="text-danger"></span>
-
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="Location1">Institution :</label>
-                                                    <input type="text" asp-for="Institution" class="form-control">
-                                                    <span asp-validation-for="Institution" class="text-danger"></span>
-
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="intType1">Year of graduation :</label>
-                                                    <input type="text" asp-for="GraduationYear" class="form-control">
-                                                    <span asp-validation-for="GraduationYear" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="jobTitle2">CGPA :</label>
-                                                    <input type="text" asp-for="Cgpa" class="form-control">
-                                                    <span asp-validation-for="Cgpa" class="text-danger"></span>
-
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="text-4">Any short term training :</label>
-                                                    <textarea id="text-4" rows="5" asp-for="CvShorttermTranings" class="form-control"></textarea>
-
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="expriance" role="tabpanel" aria-labelledby="pills-setting-tab">
-                                <div class="card-body">
-
-                                    <!-- Step 4 -->
-                                    <section>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="behName1">No of years :</label>
-                                                    <input type="number" asp-for="NumberofExprianceYears" class="form-control" id="behName1">
-                                                    <span asp-validation-for="NumberofExprianceYears" class="text-danger"></span>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="participants1">Working Company:</label>
-                                                    <input type="text" asp-for="CurrentWorkingCompany" class="form-control">
-                                                </div>
-
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="participants1">Position title:</label>
-                                                    <input type="text" asp-for="PositionTitle" class="form-control">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="participants1">Monthly Salary:</label>
-                                                    <input type="text" asp-for="MonthlySalary" class="form-control">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="participants1">Curriculum Vitae(CV, የሥራ ልምድና የትምህርት ማስረጃ በአንድ ላይ). PDF only:</label>
-                                                    <input type="file" asp-for="Cvfile" class="form-control">
-                                                    <span asp-validation-for="Cvfile" class="text-danger"></span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="participants1">Job Locations.(ሥራውን መስራት የሚፈልጉበት ክልል)</label>
-                                                    @Html.DropDownListFor(model => model.LocName, new SelectList(Model.JobLocations, "Value", "Text"), "--Select here--", htmlAttributes: new { @class = "form-control" })
-                                                    <span asp-validation-for="LocName" class="text-danger"></span>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                                <div class="card-footer text-right">
-                                    <div class="form-group">
-                                        <a asp-action="Index">Home</a>
-                                        <input type="submit" value="Submit" class="btn btn-primary" />
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
+                    <p class="font-semibold text-slate-900">Before you submit</p>
+                    <p class="mt-2 leading-6">Use your active phone number. If you want to attach supporting documents, upload them as a single PDF file.</p>
                 </div>
             </div>
-        </div>
 
+            <form asp-action="Create" method="post" enctype="multipart/form-data" class="portal-application-form mt-8">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="JobId" />
+                <input type="hidden" asp-for="JobTitle" />
+
+                @if (!string.IsNullOrWhiteSpace(formMessage))
+                {
+                    <div class="rounded-2xl border px-4 py-3 text-sm @(string.Equals(formStatus, "warning", StringComparison.OrdinalIgnoreCase) ? "border-amber-200 bg-amber-50 text-amber-800" : "border-red-200 bg-red-50 text-red-700")">
+                        @formMessage
+                    </div>
+                }
+
+                <div asp-validation-summary="ModelOnly" class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"></div>
+
+                <section class="space-y-5">
+                    <div class="space-y-2">
+                        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Personal Information</p>
+                        <h2 class="font-display text-2xl font-bold tracking-tight text-slate-950">Tell us about yourself</h2>
+                    </div>
+
+                    <div class="portal-form-grid portal-form-grid--two">
+                        <div class="space-y-2">
+                            <label asp-for="FullName" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="FullName" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="FullName" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="PhoneNumber" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="PhoneNumber" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="PhoneNumber" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="BirthDate" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="BirthDate" type="date" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="BirthDate" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                    <div class="portal-form-grid portal-form-grid--three">
+                        <div class="space-y-3">
+                            <label asp-for="Gender" class="text-sm font-semibold text-slate-700"></label>
+                            <div class="portal-choice-grid sm:grid-cols-2">
+                                @foreach (var gender in Model.Genders)
+                                {
+                                    <label class="portal-choice-card flex gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700">
+                                        <input type="radio" asp-for="Gender" value="@gender" class="h-4 w-4 border-slate-300 text-brand focus:ring-brand/20" />
+                                        <span>@gender</span>
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="Gender" class="text-sm text-red-600"></span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label asp-for="MaritalStatus" class="text-sm font-semibold text-slate-700"></label>
+                            <div class="portal-choice-grid">
+                                @foreach (var status in Model.MaritalStatuses)
+                                {
+                                    <label class="portal-choice-card flex gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700">
+                                        <input type="radio" asp-for="MaritalStatus" value="@status" class="h-4 w-4 border-slate-300 text-brand focus:ring-brand/20" />
+                                        <span>@status</span>
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="MaritalStatus" class="text-sm text-red-600"></span>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label asp-for="Disable" class="text-sm font-semibold text-slate-700">Any disability?</label>
+                            <div class="portal-choice-grid sm:grid-cols-2">
+                                @foreach (var disability in Model.Disablities)
+                                {
+                                    <label class="portal-choice-card flex gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700">
+                                        <input type="radio" asp-for="Disable" value="@disability" class="h-4 w-4 border-slate-300 text-brand focus:ring-brand/20" />
+                                        <span>@disability</span>
+                                    </label>
+                                }
+                            </div>
+                            <span asp-validation-for="Disable" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section class="portal-form-section">
+                    <div class="space-y-2">
+                        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Location</p>
+                        <h2 class="font-display text-2xl font-bold tracking-tight text-slate-950">Where can we reach you?</h2>
+                    </div>
+
+                    <div class="portal-form-grid portal-form-grid--two">
+                        <div class="space-y-2">
+                            <label asp-for="Nation" class="text-sm font-semibold text-slate-700"></label>
+                            @Html.DropDownListFor(model => model.Nation, new SelectList(Model.Nations, "Value", "Text", Model.Nation), "-- Select nationality --", new { @class = "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" })
+                            <span asp-validation-for="Nation" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="Regid" class="text-sm font-semibold text-slate-700"></label>
+                            @Html.DropDownListFor(model => model.Regid, new SelectList(Model.Regions, "Value", "Text"), "-- Select region --", new { @class = "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" })
+                            <span asp-validation-for="Regid" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="ZoneSubcity" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="ZoneSubcity" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="ZoneSubcity" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="Worede" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="Worede" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="Worede" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="HouseNumber" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="HouseNumber" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="HouseNumber" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="portal-form-section">
+                    <div class="space-y-2">
+                        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Education</p>
+                        <h2 class="font-display text-2xl font-bold tracking-tight text-slate-950">Academic background</h2>
+                    </div>
+
+                    <div class="portal-form-grid portal-form-grid--two">
+                        <div class="space-y-2">
+                            <label asp-for="EducationField" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="EducationField" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" placeholder="Example: Journalism, Accounting, Computer Science" />
+                            <span asp-validation-for="EducationField" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="EducationLevel" class="text-sm font-semibold text-slate-700"></label>
+                            @Html.DropDownListFor(model => model.EducationLevel, new SelectList(Model.EducationLevels, "Value", "Text", Model.EducationLevel), "-- Select education level --", new { @class = "w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" })
+                            <span asp-validation-for="EducationLevel" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="Institution" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="Institution" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="Institution" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="GraduationYear" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="GraduationYear" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="GraduationYear" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="Cgpa" class="text-sm font-semibold text-slate-700"></label>
+                            <input asp-for="Cgpa" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="Cgpa" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="portal-form-section">
+                    <div class="space-y-2">
+                        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Experience</p>
+                        <h2 class="font-display text-2xl font-bold tracking-tight text-slate-950">Professional details</h2>
+                        <p class="text-sm leading-7 text-slate-600">If you are a fresh graduate, enter <span class="font-semibold text-slate-900">0</span> years of experience and leave the optional work fields blank.</p>
+                    </div>
+
+                    <div class="portal-form-grid portal-form-grid--two">
+                        <div class="space-y-2">
+                            <label asp-for="NumberofExprianceYears" class="text-sm font-semibold text-slate-700">Years of relevant experience</label>
+                            <input asp-for="NumberofExprianceYears" type="number" step="0.1" min="0" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <span asp-validation-for="NumberofExprianceYears" class="text-sm text-red-600"></span>
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="CurrentWorkingCompany" class="text-sm font-semibold text-slate-700">Current or most recent employer</label>
+                            <input asp-for="CurrentWorkingCompany" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="PositionTitle" class="text-sm font-semibold text-slate-700">Current or most recent job title</label>
+                            <input asp-for="PositionTitle" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                        </div>
+                        <div class="space-y-2">
+                            <label asp-for="MonthlySalary" class="text-sm font-semibold text-slate-700">Current or most recent monthly salary</label>
+                            <input asp-for="MonthlySalary" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-brand focus:ring-4 focus:ring-brand/10" placeholder="Optional" />
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label for="Cvfile" class="text-sm font-semibold text-slate-700">CV and supporting documents (optional PDF)</label>
+                            <input id="Cvfile" name="Cvfile" type="file" accept=".pdf,application/pdf" data-val="false" class="w-full rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition file:mr-4 file:rounded-xl file:border-0 file:bg-brand/10 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand hover:border-brand/40 focus:border-brand focus:ring-4 focus:ring-brand/10" />
+                            <p class="text-sm leading-6 text-slate-500">You can leave this empty and still submit the application.</p>
+                            <span asp-validation-for="Cvfile" class="text-sm text-red-600"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="portal-form-actions">
+                    <a asp-action="Index" class="inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:text-slate-950">
+                        Back to vacancies
+                    </a>
+                    <button type="submit" class="portal-gradient inline-flex items-center justify-center rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-soft transition duration-300 hover:-translate-y-0.5 hover:shadow-2xl">
+                        Submit application
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+</section>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-
-

@@ -1,104 +1,44 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="page-breadcrumb">
-    <div class="row">
-        <div class="col-5 align-self-center">
-            <h4 class="page-title">Dashboard</h4>
-        </div>
-        <div class="col-7 align-self-center">
-            <div class="d-flex align-items-center justify-content-end">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-action="Index">Home</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">General information</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <a asp-action="Index" asp-controller="JobLists">
-                            <div class="row align-items-center">
-                                <div class="col-7">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
-                                    </svg>
-                                    <p class="font-16 m-b-5">Active Vacancies</p>
-                                </div>
-                                <div class="col-5">
-                                    <h1 class="font-light text-right mb-0">@ViewBag.activVacancies</h1>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <a asp-action="ExpiredJobs" asp-controller="JobLists">
-                            <div class="row align-items-center">
-                                <div class="col-7">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                                        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
-                                    </svg>
-                                    <br />
-                                    <p class="font-16 m-b-5">Expired Vacancies</p>
-                                </div>
-                                <div class="col-5">
-                                    <h1 class="font-light text-right mb-0">@ViewBag.expiredVacancies</h1>
-                                </div>
-                            </div></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <a asp-action="Index" asp-controller="Applicants">
-                            <div class="row align-items-center">
-                                <div class="col-7">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
-                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                                    </svg>
-                                    <p class="font-16 m-b-5">Total Applicants</p>
-                                </div>
-                                <div class="col-5">
-                                    <h1 class="font-light text-right mb-0">@ViewBag.applicants</h1>
-                                </div>
-                            </div></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <a asp-action="Index" asp-controller="AdminlUsers">
-                            <div class="row align-items-center">
-                                <div class="col-7">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
-                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
-                                    </svg>
-                                    <p class="font-16 m-b-5">Admin Users</p>
-                                </div>
-                                <div class="col-5">
-                                    <h1 class="font-light text-right mb-0">@ViewBag.adminUsers</h1>
-                                </div>
-                            </div></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
+@* The dashboard opens with a quiet summary grid so administrators can understand portal activity immediately. *@
+<section class="space-y-8">
+    <div class="max-w-3xl space-y-3">
+        <p class="text-sm font-semibold uppercase tracking-[0.08em] text-brand">Overview</p>
+        <h1 class="text-4xl font-bold tracking-tight text-slate-950">Recruitment dashboard</h1>
+        <p class="text-base leading-7 text-slate-600">A focused summary of jobs, applications, and currently active vacancies.</p>
     </div>
 
+    @if (!Model.IsDatabaseAvailable)
+    {
+        @* A warning banner keeps the admin shell usable even when SQL Server is offline. *@
+        <div class="rounded-[1.75rem] border border-amber-200 bg-amber-50 px-6 py-5 text-amber-800">
+            <p class="text-sm font-semibold uppercase tracking-[0.06em]">Database unavailable</p>
+            <p class="mt-2 text-sm leading-7">@Model.StatusMessage</p>
+        </div>
+    }
+
+    @* Three cards are enough to create a clear dashboard without recreating the clutter of the legacy template. *@
+    <div class="grid gap-6 xl:grid-cols-3">
+        <a asp-controller="JobLists" asp-action="Index" class="admin-card block rounded-[2rem] p-6 transition duration-300 hover:-translate-y-0.5">
+            <p class="text-sm font-semibold uppercase tracking-[0.06em] text-slate-500">Total Jobs</p>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-slate-950">@Model.TotalJobs</p>
+            <p class="mt-3 text-sm leading-7 text-slate-600">All job records currently stored in the portal.</p>
+        </a>
+
+        <a asp-controller="Applicants" asp-action="Index" class="admin-card block rounded-[2rem] p-6 transition duration-300 hover:-translate-y-0.5">
+            <p class="text-sm font-semibold uppercase tracking-[0.06em] text-slate-500">Total Applicants</p>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-slate-950">@Model.TotalApplicants</p>
+            <p class="mt-3 text-sm leading-7 text-slate-600">Submitted applications available for HR review.</p>
+        </a>
+
+        <a asp-controller="JobLists" asp-action="Index" class="admin-card block rounded-[2rem] p-6 transition duration-300 hover:-translate-y-0.5">
+            <p class="text-sm font-semibold uppercase tracking-[0.06em] text-slate-500">Active Vacancies</p>
+            <p class="mt-4 text-4xl font-bold tracking-tight text-slate-950">@Model.ActiveVacancies</p>
+            <p class="mt-3 text-sm leading-7 text-slate-600">Open opportunities currently visible to applicants.</p>
+        </a>
+    </div>
+</section>

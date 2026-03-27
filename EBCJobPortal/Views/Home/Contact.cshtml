@@ -1,0 +1,44 @@
+@{
+    // The contact page metadata keeps the page discoverable while staying simple.
+    ViewData["Title"] = "Contact";
+    ViewData["Description"] = "Contact information for the EBC Job Portal.";
+}
+
+@* This page is intentionally simple and quiet so it fits the rest of the client portal. *@
+<section class="pb-20 pt-14">
+    <div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div class="max-w-2xl space-y-3">
+            @* The eyebrow provides structure without bringing back breadcrumb clutter. *@
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand">Contact</p>
+            <h1 class="font-display text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Get in touch</h1>
+            <p class="text-base leading-7 text-slate-600">
+                For questions related to vacancies and the application process, please use the official EBC communication channels below.
+            </p>
+        </div>
+
+        @* A single clean card keeps the information easy to scan and consistent with the portal design system. *@
+        <div class="portal-surface mt-10 rounded-[2rem] p-8 sm:p-10">
+            <div class="grid gap-6 sm:grid-cols-2">
+                <div class="space-y-2">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Website</p>
+                    <a href="https://www.ebc.et" target="_blank" rel="noreferrer" class="text-base font-semibold text-brand transition hover:text-brand-light">
+                        www.ebc.et
+                    </a>
+                </div>
+                <div class="space-y-2">
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Support</p>
+                    <p class="text-base leading-7 text-slate-600">
+                        Please contact the EBC recruitment or HR team through the official channels published on the main EBC website.
+                    </p>
+                </div>
+            </div>
+
+            @* This note sets a clear expectation without inventing contact details that are not in the project. *@
+            <div class="mt-8 rounded-2xl border border-slate-200 bg-white px-5 py-4">
+                <p class="text-sm leading-7 text-slate-600">
+                    If a vacancy requires additional clarification, refer to the details included in the job posting or visit the official EBC website for the latest contact information.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
